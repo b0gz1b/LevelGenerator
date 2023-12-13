@@ -55,8 +55,10 @@ public class Hexagon : PathSymbol
 
 public class Square : PillarSymbol
 {
-    public Square()
+    int color_id;
+    public Square(int color_id)
     {
+        this.color_id = color_id;
         Console.WriteLine("Square created");
     }
     public override void PlaceSymbol(int index_col, int index_row, int n_cols, int n_rows)
@@ -75,8 +77,10 @@ public class Square : PillarSymbol
 
 public class Sun : PillarSymbol
 {
-    public Sun()
+    int color_id;
+    public Sun(int color_id)
     {
+        this.color_id = color_id;
         Console.WriteLine("Sun created");
     }
     public override void PlaceSymbol(int index_col, int index_row, int n_cols, int n_rows)
