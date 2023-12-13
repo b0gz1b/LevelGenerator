@@ -9,7 +9,8 @@ class Program
         Hexagon hexagon = new();
         Square square = new();
         Sun sun = new();
-
+        puzzlePanel.SetStart(0, 0);
+        puzzlePanel.SetEnd(2, 6);
         // Place symbols on the panel
         puzzlePanel.PlaceSymbol(hexagon, 4, 2);
         puzzlePanel.PlaceSymbol(square, 3, 3);
