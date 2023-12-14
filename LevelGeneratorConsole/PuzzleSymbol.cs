@@ -1,4 +1,3 @@
-using System;
 public interface IPuzzleSymbol
 {
     public void PlaceSymbol(int index_col, int index_row, int n_cols, int n_rows);

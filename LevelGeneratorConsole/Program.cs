@@ -3,14 +3,12 @@ class Program
     static void Main()
     {
         // Create a panel with dimensions 3x3
-        Panel puzzlePanel = new(3, 3);
+        Panel puzzlePanel = new(4, 4);
         puzzlePanel.PrintPanel();
         // Create symbols
         Hexagon hexagon = new();
-        Square square = new();
-        Sun sun = new();
-        puzzlePanel.SetStart(0, 0);
-        puzzlePanel.SetEnd(2, 6);
+        Square square = new(0);
+        Sun sun = new(0);
         // Place symbols on the panel
         puzzlePanel.PlaceSymbol(hexagon, 4, 2);
         puzzlePanel.PlaceSymbol(square, 3, 3);
@@ -18,5 +16,14 @@ class Program
 
         // Print the current state of the panel
         puzzlePanel.PrintPanel();
+        Console.WriteLine();
+        // Generate a random path
+        for(int i = 0; i < 10; i++){
+            Path randomPath = Path.GenerateRandomPath(puzzlePanel);
+            randomPath.PrintPath();
+            Console.WriteLine();
+        }
+        // Print the random path
+        // randomPath.PrintPath();
     }
 }
