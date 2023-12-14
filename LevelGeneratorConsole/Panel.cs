@@ -34,6 +34,7 @@ public class Panel
     {
         // Check if the placement is within the bounds of the panel
         if(!IsPointValid(indexRow, indexCol)){
+            Debug.WriteLine(indexRow + " " + indexCol);
             throw new ArgumentOutOfRangeException("indexCol, indexRow");
         }
         // Check if the placement is on a node
@@ -55,6 +56,43 @@ public class Panel
         start = new Tuple<int, int>(indexRow, indexCol);
     }
 
+    public Tuple<int, int> RandomStartEnd()
+    {
+        // Draw if the start position is freely on a row or a column, the other one being -1 or the lenght complementing the other one
+        Random random = new();
+        int rowOrCol = random.Next(2);
+        if (rowOrCol == 0)
+        {
+            // Set the row on which the start position will be placed
+            int row = random.Next((grid.GetLength(0)+1)/2) * 2;
+            // Set the column on which the start position will be placed
+            int randomCol = random.Next(2);
+            if (randomCol == 0)
+            {
+                return new Tuple<int, int>(row, 0);
+            }
+            else
+            {
+                return new Tuple<int, int>(row, grid.GetLength(1) - 1);
+            }
+        }
+        else
+        {
+            // Set the column on which the start position will be placed
+            int col = random.Next((grid.GetLength(1)+1)/2) * 2;
+            // Set the row on which the start position will be placed
+            int randomRow = random.Next(2);
+            if (randomRow == 0)
+            {
+                return new Tuple<int, int>(0, col);
+            }
+            else
+            {
+                return new Tuple<int, int>(grid.GetLength(0) - 1, col);
+            }
+        }
+    }
+
     public void SetEnd(int indexRow, int indexCol)
     {
         // Check if the placement is valid
@@ -66,65 +104,11 @@ public class Panel
     public void PrintPanel()
     {
         // Print the current state of the panel
-        bool hasStartPrinted = false;
-        bool hasEndPrinted = false;
-        for (int row = -1; row <= grid.GetLength(0); row++)
+        for (int row = 0; row < grid.GetLength(0); row++)
         {
-            for (int col = -1; col <= grid.GetLength(1); col++)
+            for (int col = 0; col < grid.GetLength(1); col++)
             {
-                if (row == -1 || row == grid.GetLength(0) || col == -1 || col == grid.GetLength(1))
-                {
-                    // If the current position is the start or end position, print S or E on the top if it is on row 0 or the bottom if it is on the last row, then to the left if it is on column 0 or to the right if it is on the last column if not on the first or last row
-                    // top <-> row == -1
-                    // bottom <-> row == grid.GetLength(0)
-                    // left <-> col == -1
-                    // right <-> col == grid.GetLength(1)
-                    if (start.Item1 == 0 && row == -1 && col == start.Item2 && !hasStartPrinted)
-                    {
-                        Console.Write("S ");
-                        hasStartPrinted = true;
-                    }
-                    else if (start.Item2 == 0 && row == start.Item1 && col == -1 && !hasStartPrinted)
-                    {
-                        Console.Write("S ");
-                        hasStartPrinted = true;
-                    }
-                    else if (start.Item1 == grid.GetLength(0) - 1 && row == grid.GetLength(0) && col == start.Item2 && !hasStartPrinted)
-                    {
-                        Console.Write("S ");
-                        hasStartPrinted = true;
-                    }
-                    else if (start.Item2 == grid.GetLength(1) - 1 && row == start.Item1 && col == grid.GetLength(1) && !hasStartPrinted)
-                    {
-                        Console.Write("S ");
-                        hasStartPrinted = true;
-                    }
-                    else if (end.Item1 == 0 && row == -1 && col == end.Item2 && !hasEndPrinted)
-                    {
-                        Console.Write("E ");
-                        hasEndPrinted = true;
-                    }
-                    else if (end.Item2 == 0 && row == end.Item1 && col == -1 && !hasEndPrinted)
-                    {
-                        Console.Write("E ");
-                        hasEndPrinted = true;
-                    }
-                    else if (end.Item1 == grid.GetLength(0) - 1 && row == grid.GetLength(0) && col == end.Item2 && !hasEndPrinted)
-                    {
-                        Console.Write("E ");
-                        hasEndPrinted = true;
-                    }
-                    else if (end.Item2 == grid.GetLength(1) - 1 && row == end.Item1 && col == grid.GetLength(1) && !hasEndPrinted)
-                    {
-                        Console.Write("E ");
-                        hasEndPrinted = true;
-                    }
-                    else
-                    {
-                        Console.Write("  ");
-                    }
-                }
-                else if (grid[row, col] != null)
+                if (grid[row, col] != null)
                 {
                     Console.Write(grid[row, col].GetSymbol() + " ");
                 }
@@ -212,7 +196,16 @@ public class Panel
             for (int col = 0; col < grid.GetLength(1); col++)
             {
                 if(pathGrid[row, col]){
-                    Console.Write("~ ");
+                    // S for start, E for end, * in between
+                    if(row == start.Item1 && col == start.Item2){
+                        Console.Write("S ");
+                    }
+                    else if(row == end.Item1 && col == end.Item2){
+                        Console.Write("E ");
+                    }
+                    else{
+                        Console.Write("* ");
+                    }
                 }
                 else
                 {
@@ -239,5 +232,15 @@ public class Panel
             }
             Console.WriteLine();
         }
+    }
+
+    public void SetStart(Tuple<int, int> tuple)
+    {
+        SetStart(tuple.Item1, tuple.Item2);
+    }
+
+    public void SetEnd(Tuple<int, int> tuple)
+    {
+        SetEnd(tuple.Item1, tuple.Item2);
     }
 }

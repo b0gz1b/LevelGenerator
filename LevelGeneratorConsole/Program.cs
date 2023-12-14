@@ -14,6 +14,9 @@ class Program
         puzzlePanel.PlaceSymbol(square, 3, 3);
         puzzlePanel.PlaceSymbol(sun, 5, 1);
 
+        // Change the start and end positions
+        puzzlePanel.SetStart(puzzlePanel.RandomStartEnd());
+        puzzlePanel.SetEnd(puzzlePanel.RandomStartEnd());
         // Print the current state of the panel
         puzzlePanel.PrintPanel();
         Console.WriteLine();
