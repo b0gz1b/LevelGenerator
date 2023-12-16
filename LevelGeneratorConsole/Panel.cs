@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 public class Panel
 {
@@ -144,7 +145,7 @@ public class Panel
                     }
                     else
                     {
-                        Console.Write("X ");
+                        Console.Write("O ");
                     }
                 }
             }
@@ -180,6 +181,36 @@ public class Panel
         }
         
         return neighbourNodes;
+    }
+
+    public List<Tuple<int, int>> GetNeighbourPillars(int indexRow, int indexCol)
+    {
+        // Check if the point is within the bounds of the panel
+        if(!IsPointValid(indexRow, indexCol)){
+            throw new ArgumentOutOfRangeException("indexCol, indexRow");
+        }
+        // Check if the point is a pillar
+        if (indexCol % 2 == 0 || indexRow % 2 == 0)
+        {
+            throw new Exception("Invalid placement");
+        }
+
+        // Initialize the list of all possible neighbour pillars
+        List<Tuple<int, int>> neighbourPillars = new();
+        if(IsPointValid(indexRow - 2, indexCol)){
+            neighbourPillars.Add(new Tuple<int, int>(indexRow - 2, indexCol));
+        }
+        if(IsPointValid(indexRow + 2, indexCol)){
+            neighbourPillars.Add(new Tuple<int, int>(indexRow + 2, indexCol));
+        }
+        if(IsPointValid(indexRow, indexCol - 2)){
+            neighbourPillars.Add(new Tuple<int, int>(indexRow, indexCol - 2));
+        }
+        if(IsPointValid(indexRow, indexCol + 2)){
+            neighbourPillars.Add(new Tuple<int, int>(indexRow, indexCol + 2));
+        }
+        
+        return neighbourPillars;
     }
 
 
@@ -243,7 +274,106 @@ public class Panel
                     }
                     else
                     {
-                        Console.Write("X ");
+                        Console.Write("O ");
+                    }
+                }
+            }
+            Console.WriteLine();
+        }
+    }
+
+    public List<List<Tuple<int, int>>> GetRegions(List<Tuple<int,int>> path){
+        // Get the regions a path splits the panel into
+        // A region is a list of nodes that are not separated by the path, meaning a path can be drawn between any two nodes in the region regardless of the walls
+        List<Tuple<int, int>> dfs_pillars(int indexRow, int indexCol){
+            // Depth-first search to find all the pillars in the region
+            List<Tuple<int, int>> pillars = new();
+            Stack<Tuple<int, int>> stack = new();
+            stack.Push(new Tuple<int, int>(indexRow, indexCol));
+            while(stack.Count > 0){
+                Tuple<int, int> current = stack.Pop();
+                if(!pillars.Contains(current)){
+                    pillars.Add(current);
+                    foreach(Tuple<int, int> neighbour in GetNeighbourPillars(current.Item1, current.Item2)){
+                        // find the edge between the current pillar and the neighbour pillar
+                        Tuple<int, int> edge = new((current.Item1 + neighbour.Item1) / 2, (current.Item2 + neighbour.Item2) / 2);
+                        if(!path.Contains(edge)){
+                            stack.Push(neighbour);
+                        }
+                    }
+                }
+            }
+            return pillars;
+
+        }
+        List<List<Tuple<int, int>>> regions = new();
+        List<Tuple<int, int>> not_visited = new();
+        for(int row = 1; row < grid.GetLength(0) - 1; row+=2){
+            for(int col = 1; col < grid.GetLength(1) - 1; col+=2){
+                not_visited.Add(new Tuple<int, int>(row, col));
+            }
+        }
+        // Depth-first search to find all the regions using auxiliary function dfs_pillars
+        while(not_visited.Count > 0){
+            List<Tuple<int, int>> pillars = dfs_pillars(not_visited[0].Item1, not_visited[0].Item2);
+            foreach(Tuple<int, int> pillar in pillars){
+                not_visited.Remove(pillar);
+            }
+            regions.Add(pillars);
+        }
+        return regions;
+    }
+
+    public void PrintRegions(List<Tuple<int, int>> points){
+        bool[,] pathGrid = new bool[grid.GetLength(0), grid.GetLength(1)];
+        List<List<Tuple<int, int>>> regions = GetRegions(points);
+        foreach(Tuple<int, int> point in points){
+            pathGrid[point.Item1, point.Item2] = true;
+        }
+        for (int row = 0; row < grid.GetLength(0); row++)
+        {
+            for (int col = 0; col < grid.GetLength(1); col++)
+            {
+                if(pathGrid[row, col]){
+                    // S for start, E for end, * in between
+                    if(row == start.Item1 && col == start.Item2){
+                        Console.Write("S ");
+                    }
+                    else if(row == end.Item1 && col == end.Item2){
+                        Console.Write("E ");
+                    }
+                    else{
+                        Console.Write("* ");
+                    }
+                }
+                else
+                {
+                    if (grid[row, col] is Wall)
+                    {
+                        Console.Write(grid[row, col].GetSymbol() + " ");
+                    }
+                    else if (row % 2 == 0 && col % 2 == 0)
+                    {
+                        Console.Write(". ");
+                    }
+                    else if (row % 2 != col % 2)
+                    {
+                        if (row % 2 == 0)
+                        {
+                            Console.Write("- ");
+                        }
+                        else
+                        {
+                            Console.Write("| ");
+                        }
+                    }
+                    else
+                    {
+                        for(int i = 0; i < regions.Count; i++){
+                            if(regions[i].Contains(new Tuple<int, int>(row, col))){
+                                Console.Write(i + " ");
+                            }
+                        }
                     }
                 }
             }

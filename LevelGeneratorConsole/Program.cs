@@ -27,7 +27,7 @@ class Program
         // Generate a random path
         for(int i = 0; i < 10; i++){
             Path randomPath = Path.GenerateRandomPath(puzzlePanel);
-            randomPath.PrintPath();
+            puzzlePanel.PrintRegions(randomPath.GetPoints());
             Console.WriteLine();
         }
 

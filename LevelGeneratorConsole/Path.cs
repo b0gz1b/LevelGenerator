@@ -74,6 +74,10 @@ class Path{
         panel.PrintPath(points);
     }
 
+    public List<Tuple<int, int>> GetPoints(){
+        return points;
+    }
+
     public static Path GenerateRandomPath(Panel panel){
         // Create a path
         Path path = new(panel);
