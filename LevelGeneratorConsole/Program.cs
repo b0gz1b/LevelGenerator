@@ -9,14 +9,18 @@ class Program
         Hexagon hexagon = new();
         Square square = new(0);
         Sun sun = new(0);
+        Wall wall1 = new();
+        Wall wall2 = new();
         // Place symbols on the panel
         puzzlePanel.PlaceSymbol(hexagon, 4, 2);
         puzzlePanel.PlaceSymbol(square, 3, 3);
         puzzlePanel.PlaceSymbol(sun, 5, 1);
+        puzzlePanel.PlaceSymbol(wall1, 3, 6);
+        puzzlePanel.PlaceSymbol(wall2, 0, 3);
+
 
         // Change the start and end positions
-        puzzlePanel.SetStart(puzzlePanel.RandomStartEnd());
-        puzzlePanel.SetEnd(puzzlePanel.RandomStartEnd());
+        puzzlePanel.RandomStartEndCOVR();
         // Print the current state of the panel
         puzzlePanel.PrintPanel();
         Console.WriteLine();
@@ -26,7 +30,6 @@ class Program
             randomPath.PrintPath();
             Console.WriteLine();
         }
-        // Print the random path
-        // randomPath.PrintPath();
+
     }
 }

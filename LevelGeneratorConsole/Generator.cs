@@ -1,6 +1,6 @@
 static class Generator
 {
-    public static Path GenerateLevel(int nRows, int nCols, int nSquare, int nSun, int nHexagon)
+    public static Path GenerateLevel(int nRows, int nCols, int nXa , int nSquare, int nSun, int nHexagon)
     {
         Panel puzzlePanel = new(nRows, nCols);
         // Place random start and end positions

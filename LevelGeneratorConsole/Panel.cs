@@ -93,6 +93,19 @@ public class Panel
         }
     }
 
+    public void RandomStartEndCOVR(){
+        // For COVR we want only starts on the bottom row and ends on the top row
+        Random random = new();
+        int row = grid.GetLength(0) - 1;
+        int col = random.Next((grid.GetLength(1)+1)/2) * 2;
+        start = new Tuple<int, int>(row, col);
+        SetStart(start);
+        row = 0;
+        col = random.Next((grid.GetLength(1)+1)/2) * 2;
+        end = new Tuple<int, int>(row, col);
+        SetEnd(end);
+    }
+
     public void SetEnd(int indexRow, int indexCol)
     {
         // Check if the placement is valid
@@ -151,18 +164,18 @@ public class Panel
             throw new Exception("Invalid placement");
         }
 
-        // Initialize the list of all possible neighbour nodes
+        // Initialize the list of all possible neighbour nodes not separated by a wall
         List<Tuple<int, int>> neighbourNodes = new();
-        if(IsPointValid(indexRow - 2, indexCol)){
+        if(IsPointValid(indexRow - 2, indexCol) && grid[indexRow - 1, indexCol] is not Wall){
             neighbourNodes.Add(new Tuple<int, int>(indexRow - 2, indexCol));
         }
-        if(IsPointValid(indexRow + 2, indexCol)){
+        if(IsPointValid(indexRow + 2, indexCol) && grid[indexRow + 1, indexCol] is not Wall){
             neighbourNodes.Add(new Tuple<int, int>(indexRow + 2, indexCol));
         }
-        if(IsPointValid(indexRow, indexCol - 2)){
+        if(IsPointValid(indexRow, indexCol - 2) && grid[indexRow, indexCol - 1] is not Wall){
             neighbourNodes.Add(new Tuple<int, int>(indexRow, indexCol - 2));
         }
-        if(IsPointValid(indexRow, indexCol + 2)){
+        if(IsPointValid(indexRow, indexCol + 2) && grid[indexRow, indexCol + 1] is not Wall){
             neighbourNodes.Add(new Tuple<int, int>(indexRow, indexCol + 2));
         }
         
@@ -209,7 +222,11 @@ public class Panel
                 }
                 else
                 {
-                    if (row % 2 == 0 && col % 2 == 0)
+                    if (grid[row, col] is Wall)
+                    {
+                        Console.Write(grid[row, col].GetSymbol() + " ");
+                    }
+                    else if (row % 2 == 0 && col % 2 == 0)
                     {
                         Console.Write(". ");
                     }
