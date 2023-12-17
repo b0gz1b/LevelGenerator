@@ -74,8 +74,21 @@ class Path{
         panel.PrintPath(points);
     }
 
+    public void PrintPanel(){
+        panel.PrintPanel();
+    }
+
+    public void PrintRegions(){
+        panel.PrintRegions(points);
+    }
+
+    public void SetPanel(Panel panel){
+        this.panel = panel;
+    }
+
     public List<Tuple<int, int>> GetPoints(){
-        return points;
+        // Return a copy of the list of points
+        return new List<Tuple<int, int>>(points);
     }
 
     public static Path GenerateRandomPath(Panel panel){
@@ -95,7 +108,7 @@ class Path{
                 randomIndex = random.Next(neighbourNodes.Count);  
             }
             if(neighbourNodes.Count == 0){
-                Debug.Print("No neighbour nodes left, backtrack");
+                // Debug.Print("No neighbour nodes left, backtrack");
                 // Remove the last node and edge from the path, while storing the last node
                 Tuple<int, int> lastNode = path.GetLastNode();
                 invalidNeighbourNodes.Add(lastNode);
@@ -115,5 +128,16 @@ class Path{
             }
         }
         return path;
+    }
+
+    public void WriteToFiles(string filePanelPath, string filePointsPath)
+    {
+        panel.WriteToFile(filePanelPath);
+        using StreamWriter file = new StreamWriter(filePointsPath);
+        foreach (Tuple<int, int> point in points)
+        {
+            file.WriteLine(point.Item1 + "," + point.Item2);
+        }
+
     }
 }

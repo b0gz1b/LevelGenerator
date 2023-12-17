@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 public class Panel
 {
@@ -15,6 +16,20 @@ public class Panel
         end = new Tuple<int, int>(0, 0);
     }
 
+    public Panel(Panel panel){
+        // Initialize the grid with the specified dimensions
+        grid = new IPuzzleSymbol[panel.GetGrid().GetLength(0), panel.GetGrid().GetLength(1)];
+        start = panel.GetStart();
+        end = panel.GetEnd();
+        for(int row = 0; row < grid.GetLength(0); row++){
+            for(int col = 0; col < grid.GetLength(1); col++){
+                if(panel.GetGrid()[row, col] is not null){
+                    grid[row, col] = panel.GetGrid()[row, col].Copy();
+                }
+            }
+        }
+    }
+
     public void PlaceSymbol(IPuzzleSymbol symbol, int indexRow, int indexCol)
     {
         // Check if the placement is within the bounds of the panel
@@ -28,6 +43,18 @@ public class Panel
 
         // Call the symbol's PlaceSymbol method with the correct dimensions
         symbol.PlaceSymbol(indexCol, indexRow, grid.GetLength(1), grid.GetLength(0));
+    }
+
+    public void RemoveSymbol(int indexRow, int indexCol)
+    {
+        // Check if the placement is within the bounds of the panel
+        if (indexCol < 0 || indexCol > grid.GetLength(1) - 1 || indexRow < 0 || indexRow > grid.GetLength(0) - 1)
+        {
+            throw new ArgumentOutOfRangeException("indexCol, indexRow");
+        }
+
+        // Remove the symbol from the panel
+        grid[indexRow, indexCol] = default!;
     }
 
     public bool IsPointValid(int indexRow, int indexCol) => !(indexCol < 0 || indexCol > grid.GetLength(1) - 1 || indexRow < 0 || indexRow > grid.GetLength(0) - 1);
@@ -115,17 +142,21 @@ public class Panel
         end = new Tuple<int, int>(indexRow, indexCol);
     }
 
-    public void PrintPanel()
+    public void PrintPanel(bool printStartEnd = false)
     {
         // Print the current state of the panel
-        for (int row = 0; row < grid.GetLength(0); row++)
+        for (int row = -1; row <= grid.GetLength(0); row++)
         {
             for (int col = 0; col < grid.GetLength(1); col++)
             {
-                if (grid[row, col] != null)
-                {
+                if (printStartEnd && row == start.Item1 + 1 && col == start.Item2)
+                    Console.Write("S ");
+                else if (printStartEnd && row == end.Item1 -1 && col == end.Item2)
+                    Console.Write("E ");
+                else if (row == -1 || row == grid.GetLength(0))
+                    Console.Write("  ");
+                else if (grid[row, col] != null)
                     Console.Write(grid[row, col].GetSymbol() + " ");
-                }
                 else
                 {
                     if (row % 2 == 0 && col % 2 == 0)
@@ -274,7 +305,12 @@ public class Panel
                     }
                     else
                     {
-                        Console.Write("O ");
+                        if(grid[row, col] is not null){
+                            Console.Write(grid[row, col].GetSymbol() + " ");
+                        }
+                        else{
+                            Console.Write("O ");
+                        }
                     }
                 }
             }
@@ -389,5 +425,56 @@ public class Panel
     public void SetEnd(Tuple<int, int> tuple)
     {
         SetEnd(tuple.Item1, tuple.Item2);
+    }
+
+    internal void WriteToFile(string filePath)
+    {
+        try
+        {
+            StringBuilder jsonBuilder = new StringBuilder();
+            jsonBuilder.AppendLine("{");
+            jsonBuilder.AppendLine("\t\"Panel\": {");
+            jsonBuilder.AppendLine("\t\t\"Grid\": [");
+
+            // Write grid
+            for (int row = 0; row < grid.GetLength(0); row++)
+            {
+                for (int col = 0; col < grid.GetLength(1); col++)
+                {
+                    if (grid[row, col] is not null)
+                    {
+                        jsonBuilder.AppendLine("\t\t\t{");
+                        IPuzzleSymbol symbol = grid[row, col];
+
+                        if (symbol != null)
+                        {
+                            jsonBuilder.AppendLine($"\t\t\t\t\"Type\": \"{symbol.Name}\",");
+                            jsonBuilder.AppendLine($"\t\t\t\t\"ColorId\": {symbol.GetColorId()},");
+                            jsonBuilder.AppendLine($"\t\t\t\t\"Position\": {{\"Row\": {row}, \"Col\": {col}}}");
+                        }
+
+                        jsonBuilder.AppendLine("\t\t\t},");
+                    }
+                }
+            }
+
+            // Remove the trailing comma if there are items in the grid
+            if (jsonBuilder.Length > 0)
+            {
+                jsonBuilder.Remove(jsonBuilder.Length - 3, 1);
+            }
+
+            jsonBuilder.AppendLine("\t\t],");
+            jsonBuilder.AppendLine($"\t\t\"Start\": {{\"Row\": {start.Item1}, \"Col\": {start.Item2}}},");
+            jsonBuilder.AppendLine($"\t\t\"End\": {{\"Row\": {end.Item1}, \"Col\": {end.Item2}}}");
+            jsonBuilder.AppendLine("\t}");
+            jsonBuilder.AppendLine("}");
+
+            File.WriteAllText(filePath, jsonBuilder.ToString());
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error writing JSON file: {e.Message}");
+        }
     }
 }
