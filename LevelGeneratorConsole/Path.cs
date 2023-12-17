@@ -140,4 +140,75 @@ class Path{
         }
 
     }
+
+    internal bool isPathValid()
+    {
+        // get the grid
+        IPuzzleSymbol[,] grid = panel.GetGrid();
+        // get regions
+        List<List<Tuple<int, int>>> regions = panel.GetRegions(points);
+        // check if all squares of a region have the same color
+        foreach (List<Tuple<int, int>> region in regions)
+        {
+            int colorId = -1;
+            foreach (Tuple<int, int> square in region)
+            {
+                if (grid[square.Item1, square.Item2] != null && grid[square.Item1, square.Item2].Name == "Square"){
+                    if(colorId == -1)
+                    {
+                        colorId = grid[square.Item1, square.Item2].GetColorId();
+                    }
+                    else if (colorId != grid[square.Item1, square.Item2].GetColorId())
+                    {
+                        // Console.WriteLine("colorId: " + colorId + " != " + grid[square.Item1, square.Item2].GetColorId());
+                        return false;
+                    }
+                }
+            }
+        }
+        // check if for all suns of a region, you can pair it with exactly one other symbol of the same color
+        foreach (List<Tuple<int, int>> region in regions)
+        {
+            foreach (Tuple<int, int> sun in region)
+            {
+                if (grid[sun.Item1, sun.Item2] != null && grid[sun.Item1, sun.Item2].Name == "Sun")
+                {
+                    int colorId = grid[sun.Item1, sun.Item2].GetColorId();
+                    int count = 1;
+                    foreach (Tuple<int, int> symbol in region)
+                    {
+                        if (grid[symbol.Item1, symbol.Item2] != null && (grid[symbol.Item1, symbol.Item2].Name == "Square" || grid[symbol.Item1, symbol.Item2].Name == "Sun"))
+                        {
+                            if (grid[symbol.Item1, symbol.Item2].GetColorId() == colorId && symbol != sun)
+                            {
+                                count++;
+                            }
+                        }
+                    }
+                    if (count != 2)
+                    {
+                        // Console.WriteLine("count: " + count + " != 2");
+                        return false;
+                    }
+                }
+            }
+        }
+        // check if all hexagons are on the path
+        for(int i = 0; i < grid.GetLength(0); i++)
+        {
+            for(int j = 0; j < grid.GetLength(1); j++)
+            {
+                Tuple<int, int> point = new(i, j);
+                if (grid[point.Item1, point.Item2] != null && grid[point.Item1, point.Item2].Name == "Hexagon")
+                {
+                    if (!points.Contains(point))
+                    {
+                        // Console.WriteLine("Hexagon not on path");
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
 }

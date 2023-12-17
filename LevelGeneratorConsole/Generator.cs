@@ -71,7 +71,13 @@ static class Generator
             // puzzlePanel.PrintPanel();
 
             List<List<Tuple<int, int>>> regions = puzzlePanel.GetRegions(points);
-            if(regions.Count >= nColors){
+            int minNumberOfRegions = 0;
+            if(nSunByColor.Sum() > 0)
+                minNumberOfRegions += 1;
+            if(nSquareByColor.Sum() > 0)
+                minNumberOfRegions += 1;
+            minNumberOfRegions += nRows * nCols / 16;
+            if(regions.Count >= nColors && regions.Count >= minNumberOfRegions){
                 // Generate the array of region indices
                 int[] regionIndices = new int[regions.Count];
                 for(int i = 0; i < regionIndices.Length; i++){
@@ -110,7 +116,7 @@ static class Generator
                 // Init the array that keeps track of pillars visited at each iteration to a list of empty lists
                 List<List<Tuple<bool,Tuple<int, int>>>> pillarsVisited = new(){new()};
                 int iteration = 0;
-                int maxIterationBacktrack = 10000;
+                int maxIterationBacktrack = 5000;
                 int mustPlaceInSameRegionAsSun = -1;
                 int lastColor = -1;
                 while((nSquareByColor_copy.Sum() > 0 || nSunByColor_copy.Sum() > 0) && maxIterationBacktrack-- > 0){
@@ -127,7 +133,7 @@ static class Generator
                         // Draw if we place a square or a sun if we have both
                         bool isSquare;
                         if (regionIndex != -1)
-                            isSquare = nSunByColor_copy.Sum() == 0;
+                            isSquare = nSunByColor_copy[lastColor] == 0;
                         else if(nSquareByColor_copy.Sum() > 0 && nSunByColor_copy.Sum() > 0)
                             isSquare = random.Next(2) == 0;
                         else
@@ -162,14 +168,14 @@ static class Generator
                         if(regionIndex == -1){
                             regionIndex = regionIndices[regionIndice];
                             // Console.WriteLine("\t Trying region " + regionIndex);
-                            if(!CanPlaceSquareOrSun(regionIndex, isSquare, color, regionColor, sunCountByRegionByColor, squareCountByRegion, regions[regionIndex].Count)){
+                            if(!CanPlaceSquareOrSun(regionIndex, isSquare, color, regionColor, sunCountByRegionByColor, squareCountByRegion, regions[regionIndex].Count, nSunByColor_copy)){
                                 regionIndice++;
                                 continue;
                             }
                         }
                         else{
                             // Console.WriteLine("\t Trying region " + regionIndex);
-                            if(!CanPlaceSquareOrSun(regionIndex, isSquare, color, regionColor, sunCountByRegionByColor, squareCountByRegion, regions[regionIndex].Count))
+                            if(!CanPlaceSquareOrSun(regionIndex, isSquare, color, regionColor, sunCountByRegionByColor, squareCountByRegion, regions[regionIndex].Count, nSunByColor_copy))
                                 break;
                         }
 
@@ -237,12 +243,18 @@ static class Generator
                                 if(squareCountByRegion[lastRegionIndex] == 0)
                                     regionColor[lastRegionIndex] = -1;
                                 nSquareByColor_copy[lastColorIt]++;
+                                
                             }
                             else{
                                 lastColorIt = puzzlePanelCopy.GetGrid()[lastPillar.Item1, lastPillar.Item2].GetColorId();
                                 sunCountByRegionByColor[lastRegionIndex][lastColorIt]--;
                                 nSunByColor_copy[lastColorIt]++;
                             }
+                            // check if we need to pair a sun
+                            if(sunCountByRegionByColor[lastRegionIndex][lastColorIt] == 1 && (squareCountByRegion[lastRegionIndex] == 0 || regionColor[lastRegionIndex] != lastColorIt))
+                                mustPlaceInSameRegionAsSun = lastRegionIndex;
+                            else
+                                mustPlaceInSameRegionAsSun = -1;
                             puzzlePanelCopy.RemoveSymbol(lastPillar.Item1, lastPillar.Item2);
                         }
                     }
@@ -250,27 +262,35 @@ static class Generator
                         // Debug
                         // Console.WriteLine("\t All squares and suns placed");
                         randomPath.SetPanel(puzzlePanelCopy);
-                        is_valid = true;
+                        is_valid = randomPath.isPathValid();
                     }
                     else{
                         iteration++;
                         pillarsVisited.Add(new());
                     }
-                    // puzzlePanelCopy.PrintPanel();
+                    randomPath.SetPanel(puzzlePanelCopy);
+                    // Console.WriteLine("Must place sun? " + mustPlaceInSameRegionAsSun);
+                    // randomPath.PrintPath();
                     // Console.Write("\t");
                     // for(int i = 0; i < regionColor.Length; i++){
                     //     Console.Write("(" + i + "," + regionColor[i] + ") ");
                     // }
                     // Console.WriteLine();
                     // Pause for 1 second
-                    // Thread.Sleep(125);
+                    // Thread.Sleep(1);
+                    // for(int i = 0; i < nSunByColor_copy.Count; i++){
+                    //     Console.Write(i+ "," + nSunByColor_copy[i] + "; ");
+                    // }
+                    // Console.WriteLine();
                 }
+                // Console.WriteLine("iterations: " + (5000 - maxIterationBacktrack - 1));
+
             }
         }
         return randomPath;
     }
 
-    private static bool CanPlaceSquareOrSun(int regionIndex, bool isSquare, int symbolColor, int[] regionColor, int[][] sunCountByRegionByColor, int[] squareCountByRegion, int regionSize)
+    private static bool CanPlaceSquareOrSun(int regionIndex, bool isSquare, int symbolColor, int[] regionColor, int[][] sunCountByRegionByColor, int[] squareCountByRegion, int regionSize, List<int> nSunLeft)
     {
         int suns;
         if (regionColor[regionIndex] == -1 || !isSquare)
@@ -285,9 +305,13 @@ static class Generator
         int totalSuns = sunCountByRegionByColor[regionIndex].Sum();
         // Compute the total number of suns in the region not yey paired with a symbol of the same color
         int totalSunsNotPaired = 0;
+        List<int> colorsMissing = new();
         for (int i = 0; i < sunCountByRegionByColor[regionIndex].Length; i++)
-            if (i != regionColor[regionIndex] && sunCountByRegionByColor[regionIndex][i] == 1)
+            if (i != regionColor[regionIndex] && sunCountByRegionByColor[regionIndex][i] == 1){
                 totalSunsNotPaired++;
+                colorsMissing.Add(i);
+            }
+
         // compute all free spaces in the region
         int freeSpaces = regionSize - squareCountByRegion[regionIndex] - totalSuns;
         if (freeSpaces == 0)
@@ -299,8 +323,10 @@ static class Generator
 
         if (isSquare)
         {
-            if (regionColor[regionIndex] == -1 || regionColor[regionIndex] == symbolColor)
-            { // Check if the region color corresponds to the color of the square if the region has a color
+            if (regionColor[regionIndex] == -1 || regionColor[regionIndex] == symbolColor){ // Check if the region color corresponds to the color of the square if the region has a color
+                if (regionColor[regionIndex] == -1 && nSunLeft[symbolColor] == 0 && totalSunsNotPaired > 0)
+                    return colorsMissing.Contains(symbolColor);
+                
                 if (suns == 2)
                 {
                     return false; // We cannot place a square if there are already 2 suns of the same color (as the square) in the region
