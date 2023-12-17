@@ -162,14 +162,14 @@ static class Generator
                         if(regionIndex == -1){
                             regionIndex = regionIndices[regionIndice];
                             // Console.WriteLine("\t Trying region " + regionIndex);
-                            if(!CanPlaceSquareOrSun(regionIndex, isSquare, color, regionColor, sunCountByRegionByColor, squareCountByRegion)){
+                            if(!CanPlaceSquareOrSun(regionIndex, isSquare, color, regionColor, sunCountByRegionByColor, squareCountByRegion, regions[regionIndex].Count)){
                                 regionIndice++;
                                 continue;
                             }
                         }
                         else{
                             // Console.WriteLine("\t Trying region " + regionIndex);
-                            if(!CanPlaceSquareOrSun(regionIndex, isSquare, color, regionColor, sunCountByRegionByColor, squareCountByRegion))
+                            if(!CanPlaceSquareOrSun(regionIndex, isSquare, color, regionColor, sunCountByRegionByColor, squareCountByRegion, regions[regionIndex].Count))
                                 break;
                         }
 
@@ -270,7 +270,7 @@ static class Generator
         return randomPath;
     }
 
-    private static bool CanPlaceSquareOrSun(int regionIndex, bool isSquare, int symbolColor, int[] regionColor, int[][] sunCountByRegionByColor, int[] squareCountByRegion)
+    private static bool CanPlaceSquareOrSun(int regionIndex, bool isSquare, int symbolColor, int[] regionColor, int[][] sunCountByRegionByColor, int[] squareCountByRegion, int regionSize)
     {
         int suns;
         if (regionColor[regionIndex] == -1 || !isSquare)
@@ -281,6 +281,22 @@ static class Generator
         {
             suns = sunCountByRegionByColor[regionIndex][regionColor[regionIndex]]; // If the region has a color and we want to place a square, we check the number of suns of the same color as the region
         }
+        // compute the total number of suns in the region
+        int totalSuns = sunCountByRegionByColor[regionIndex].Sum();
+        // Compute the total number of suns in the region not yey paired with a symbol of the same color
+        int totalSunsNotPaired = 0;
+        for (int i = 0; i < sunCountByRegionByColor[regionIndex].Length; i++)
+            if (i != regionColor[regionIndex] && sunCountByRegionByColor[regionIndex][i] == 1)
+                totalSunsNotPaired++;
+        // compute all free spaces in the region
+        int freeSpaces = regionSize - squareCountByRegion[regionIndex] - totalSuns;
+        if (freeSpaces == 0)
+            return false; // We cannot place a symbol if there is no free space in the region
+
+        if(freeSpaces < totalSunsNotPaired)
+            return false; // We cannot place a symbol if there is not enough free space in the region to pair all the suns not yet paired
+
+
         if (isSquare)
         {
             if (regionColor[regionIndex] == -1 || regionColor[regionIndex] == symbolColor)
@@ -293,27 +309,27 @@ static class Generator
                 {
                     return squareCountByRegion[regionIndex] == 0; // We can place a square if there is 1 sun of the same color (as the square) in the region and no square
                 }
+                else if (regionColor[regionIndex] == symbolColor)
+                {
+                    return freeSpaces - 1 >= totalSunsNotPaired;
+                }
                 else
                 {
-                    return true; // We can place a square if there is no sun of the same color (as the square) in the region
+                    return true;
                 }
             }
             return false;
         }
         else
         { // Here suns is the number of suns of the same color as the sun we want to place
-            if (suns == 2)
-            {
+            if(regionSize == 1)
+                return false;
+            else if (suns == 2)
                 return false; // We cannot place a sun if there are already 2 suns of the same color (as the sun) in the region
-            }
             else if (suns == 1)
-            {
                 return regionColor[regionIndex] == -1 || (regionColor[regionIndex] == symbolColor && squareCountByRegion[regionIndex] == 0); // We can place a sun if there is 1 sun of the same color (as the sun) in the region and no square
-            }
             else
-            {
                 return regionColor[regionIndex] == -1 || (regionColor[regionIndex] == symbolColor && squareCountByRegion[regionIndex] < 2); // We can place a sun if there is no sun and exactly or less than 1 squares of the same color (as the sun) in the region
-            }
         }
 
 

@@ -434,6 +434,7 @@ public class Panel
             StringBuilder jsonBuilder = new StringBuilder();
             jsonBuilder.AppendLine("{");
             jsonBuilder.AppendLine("\t\"Panel\": {");
+            jsonBuilder.AppendLine($"\t\t\"GridSize\": {{\"Rows\": {grid.GetLength(0)}, \"Cols\": {grid.GetLength(1)}}},");
             jsonBuilder.AppendLine("\t\t\"Grid\": [");
 
             // Write grid
