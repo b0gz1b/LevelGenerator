@@ -1,0 +1,16 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Core Launch (console) args",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/LevelGeneratorConsole/bin/Debug/net6.0/LevelGeneratorConsole.dll",
+            "args": ["5", "5", "3", "4", "2", "2", "3", "5", "3", "LevelGeneratorConsole/out/level.json", "LevelGeneratorConsole/out/solution.csv"]
+        }
+    ]
+}

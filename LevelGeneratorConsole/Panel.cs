@@ -278,6 +278,9 @@ public class Panel
                     else if(row == end.Item1 && col == end.Item2){
                         Console.Write("E ");
                     }
+                    else if (grid[row, col] is Hexagon){
+                        Console.Write(grid[row, col].GetSymbol() + " ");
+                    }
                     else{
                         Console.Write("* ");
                     }

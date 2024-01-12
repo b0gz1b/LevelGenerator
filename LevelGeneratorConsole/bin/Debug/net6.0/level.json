@@ -1,0 +1,79 @@
+{
+	"Panel": {
+		"GridSize": {"Rows": 9, "Cols": 9},
+		"Grid": [
+			{
+				"Type": "Wall",
+				"ColorId": -1,
+				"Position": {"Row": 1, "Col": 0}
+			},
+			{
+				"Type": "Square",
+				"ColorId": 1,
+				"Position": {"Row": 1, "Col": 1}
+			},
+			{
+				"Type": "Sun",
+				"ColorId": 0,
+				"Position": {"Row": 1, "Col": 3}
+			},
+			{
+				"Type": "Square",
+				"ColorId": 0,
+				"Position": {"Row": 1, "Col": 5}
+			},
+			{
+				"Type": "Hexagon",
+				"ColorId": -1,
+				"Position": {"Row": 2, "Col": 8}
+			},
+			{
+				"Type": "Square",
+				"ColorId": 1,
+				"Position": {"Row": 3, "Col": 1}
+			},
+			{
+				"Type": "Square",
+				"ColorId": 1,
+				"Position": {"Row": 3, "Col": 3}
+			},
+			{
+				"Type": "Sun",
+				"ColorId": 0,
+				"Position": {"Row": 3, "Col": 5}
+			},
+			{
+				"Type": "Square",
+				"ColorId": 1,
+				"Position": {"Row": 3, "Col": 7}
+			},
+			{
+				"Type": "Hexagon",
+				"ColorId": -1,
+				"Position": {"Row": 3, "Col": 8}
+			},
+			{
+				"Type": "Sun",
+				"ColorId": 1,
+				"Position": {"Row": 5, "Col": 1}
+			},
+			{
+				"Type": "Wall",
+				"ColorId": -1,
+				"Position": {"Row": 5, "Col": 2}
+			},
+			{
+				"Type": "Hexagon",
+				"ColorId": -1,
+				"Position": {"Row": 6, "Col": 0}
+			},
+			{
+				"Type": "Square",
+				"ColorId": 0,
+				"Position": {"Row": 7, "Col": 3}
+			}
+		],
+		"Start": {"Row": 8, "Col": 4},
+		"End": {"Row": 0, "Col": 2}
+	}
+}
