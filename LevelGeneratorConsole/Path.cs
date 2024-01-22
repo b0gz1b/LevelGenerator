@@ -9,6 +9,17 @@ class Path{
         points = new List<Tuple<int, int>>();
     }
 
+    public Path(string filePanelPath, string filePointsPath){
+        panel = new Panel(filePanelPath);
+        points = new List<Tuple<int, int>>();
+        using StreamReader file = new StreamReader(filePointsPath);
+        string line;
+        while((line = file.ReadLine()) != null){
+            string[] coordinates = line.Split(',');
+            points.Add(new Tuple<int, int>(int.Parse(coordinates[0]), int.Parse(coordinates[1])));
+        }
+    }
+
     public bool AddNode(int indexRow, int indexCol){
         if(!panel.IsPointValid(indexRow, indexCol)){
             return false; // The node is not within the bounds of the panel
@@ -141,8 +152,10 @@ class Path{
 
     }
 
-    internal bool isPathValid()
+    internal int[] isPathValid()
     {
+        int[] result = new int[3] { 0, 0, 0 };
+
         // get the grid
         IPuzzleSymbol[,] grid = panel.GetGrid();
         // get regions
@@ -161,7 +174,7 @@ class Path{
                     else if (colorId != grid[square.Item1, square.Item2].GetColorId())
                     {
                         // Console.WriteLine("colorId: " + colorId + " != " + grid[square.Item1, square.Item2].GetColorId());
-                        return false;
+                        result[1]++;
                     }
                 }
             }
@@ -188,7 +201,7 @@ class Path{
                     if (count != 2)
                     {
                         // Console.WriteLine("count: " + count + " != 2");
-                        return false;
+                        result[2]++;
                     }
                 }
             }
@@ -204,11 +217,11 @@ class Path{
                     if (!points.Contains(point))
                     {
                         // Console.WriteLine("Hexagon not on path");
-                        return false;
+                        result[0]++;
                     }
                 }
             }
         }
-        return true;
+        return result;
     }
 }

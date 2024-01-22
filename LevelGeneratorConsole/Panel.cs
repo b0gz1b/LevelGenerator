@@ -30,6 +30,59 @@ public class Panel
         }
     }
 
+    public Panel(string filePath)
+    {
+        // Read the JSON file
+        string json = File.ReadAllText(filePath);
+
+        // Parse the JSON file
+        JObject jObject = JObject.Parse(json);
+
+        // Get the grid size
+        int nRows = (int)jObject["Panel"]["GridSize"]["Rows"] / 2 - 1;
+        int nCols = (int)jObject["Panel"]["GridSize"]["Cols"] / 2 - 1;
+
+        // Initialize the grid with the specified dimensions
+        grid = new IPuzzleSymbol[2 * nRows + 1, 2 * nCols + 1];
+
+        // Get the grid
+        JArray jGrid = (JArray)jObject["Panel"]["Grid"];
+
+        // Place the symbols on the panel
+        foreach (JObject jSymbol in jGrid)
+        {
+            // Get the symbol type
+            string symbolType = (string)jSymbol["Type"];
+
+            // Get the symbol color
+            int colorId = (int)jSymbol["ColorId"];
+
+            // Get the symbol position
+            int row = (int)jSymbol["Position"]["Row"];
+            int col = (int)jSymbol["Position"]["Col"];
+
+            // Place the symbol on the panel
+            switch (symbolType)
+            {
+                case "Wall":
+                    grid[row, col] = new Wall(colorId);
+                    break;
+                case "Hexagon":
+                    grid[row, col] = new Hexagon(colorId);
+                    break;
+                case "Square":
+                    grid[row, col] = new Square(colorId);
+                    break;
+                case "Sun":
+                    grid[row, col] = new Sun(colorId);
+                    break;
+            }
+        }
+        start = new Tuple<int, int>((int)jObject["Panel"]["Start"]["Row"], (int)jObject["Panel"]["Start"]["Col"]);
+        end = new Tuple<int, int>((int)jObject["Panel"]["End"]["Row"], (int)jObject["Panel"]["End"]["Col"]);
+    }
+
+
     public void PlaceSymbol(IPuzzleSymbol symbol, int indexRow, int indexCol)
     {
         // Check if the placement is within the bounds of the panel
@@ -481,4 +534,5 @@ public class Panel
             Console.WriteLine($"Error writing JSON file: {e.Message}");
         }
     }
+
 }

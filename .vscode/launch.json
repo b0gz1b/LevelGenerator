@@ -5,11 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Launch (console) args",
+            "name": "Generate Level",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/LevelGeneratorConsole/bin/Debug/net6.0/LevelGeneratorConsole.dll",
+            "program": "${workspaceFolder}/LevelGeneratorConsole/bin/Debug/net6.0/LevelGenerator.dll",
+            "args": ["5", "5", "3", "4", "2", "2", "3", "5", "3", "LevelGeneratorConsole/out/level.json", "LevelGeneratorConsole/out/solution.csv"]
+        },
+        {
+            "name": "Check path",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/LevelGeneratorConsole/bin/Debug/net6.0/PathChecker.dll",
             "args": ["5", "5", "3", "4", "2", "2", "3", "5", "3", "LevelGeneratorConsole/out/level.json", "LevelGeneratorConsole/out/solution.csv"]
         }
     ]

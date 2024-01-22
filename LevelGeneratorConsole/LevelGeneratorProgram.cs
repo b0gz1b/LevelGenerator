@@ -1,4 +1,4 @@
-class Program
+class LevelGeneratorProgram
 {
     static void Main(string[] args)
     {
