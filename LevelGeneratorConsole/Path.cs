@@ -1,4 +1,4 @@
-using System.Diagnostics;
+
 
 class Path{
     private Panel panel;
@@ -14,7 +14,7 @@ class Path{
         points = new List<Tuple<int, int>>();
         using StreamReader file = new StreamReader(filePointsPath);
         string line;
-        while((line = file.ReadLine()) != null){
+        while((line = file.ReadLine()!) != null){
             string[] coordinates = line.Split(',');
             points.Add(new Tuple<int, int>(int.Parse(coordinates[0]), int.Parse(coordinates[1])));
         }

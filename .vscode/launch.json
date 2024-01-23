@@ -9,16 +9,17 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/LevelGeneratorConsole/bin/Debug/net6.0/LevelGenerator.dll",
+            "program": "${workspaceFolder}/LevelGeneratorConsole/bin/Debug/net6.0/LevelGeneratorConsole.dll",
             "args": ["5", "5", "3", "4", "2", "2", "3", "5", "3", "LevelGeneratorConsole/out/level.json", "LevelGeneratorConsole/out/solution.csv"]
         },
         {
-            "name": "Check path",
+            "name": "Check Path",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/LevelGeneratorConsole/bin/Debug/net6.0/PathChecker.dll",
-            "args": ["5", "5", "3", "4", "2", "2", "3", "5", "3", "LevelGeneratorConsole/out/level.json", "LevelGeneratorConsole/out/solution.csv"]
-        }
+            "program": "${workspaceFolder}/LevelGeneratorConsole/bin/Debug/net6.0/LevelGeneratorConsole.dll",
+            "args": ["LevelGeneratorConsole/out/level.json", "LevelGeneratorConsole/out/solution.csv"]
+        },
+
     ]
 }

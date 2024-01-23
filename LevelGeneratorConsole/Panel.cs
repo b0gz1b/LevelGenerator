@@ -1,6 +1,6 @@
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Text;
+using Newtonsoft.Json.Linq;
 
 public class Panel
 {
@@ -39,8 +39,8 @@ public class Panel
         JObject jObject = JObject.Parse(json);
 
         // Get the grid size
-        int nRows = (int)jObject["Panel"]["GridSize"]["Rows"] / 2 - 1;
-        int nCols = (int)jObject["Panel"]["GridSize"]["Cols"] / 2 - 1;
+        int nRows = ((int)jObject["Panel"]["GridSize"]["Rows"] - 1) / 2;
+        int nCols = ((int)jObject["Panel"]["GridSize"]["Cols"] - 1) / 2;
 
         // Initialize the grid with the specified dimensions
         grid = new IPuzzleSymbol[2 * nRows + 1, 2 * nCols + 1];
@@ -65,10 +65,10 @@ public class Panel
             switch (symbolType)
             {
                 case "Wall":
-                    grid[row, col] = new Wall(colorId);
+                    grid[row, col] = new Wall();
                     break;
                 case "Hexagon":
-                    grid[row, col] = new Hexagon(colorId);
+                    grid[row, col] = new Hexagon();
                     break;
                 case "Square":
                     grid[row, col] = new Square(colorId);

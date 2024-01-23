@@ -262,7 +262,12 @@ static class Generator
                         // Debug
                         // Console.WriteLine("\t All squares and suns placed");
                         randomPath.SetPanel(puzzlePanelCopy);
-                        is_valid = randomPath.isPathValid();
+                        int[] res = randomPath.isPathValid();
+                        foreach(int i in res){
+                            if(i > 0){
+                                is_valid = false;
+                            }
+                        }
                     }
                     else{
                         iteration++;

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\LevelGeneratorConsole.csproj": {}
+    "C:\\Users\\atram\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\LevelGeneratorConsole.csproj": {}
   },
   "projects": {
-    "D:\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\LevelGeneratorConsole.csproj": {
+    "C:\\Users\\atram\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\LevelGeneratorConsole.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\LevelGeneratorConsole.csproj",
+        "projectUniqueName": "C:\\Users\\atram\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\LevelGeneratorConsole.csproj",
         "projectName": "LevelGeneratorConsole",
-        "projectPath": "D:\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\LevelGeneratorConsole.csproj",
+        "projectPath": "C:\\Users\\atram\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\LevelGeneratorConsole.csproj",
         "packagesPath": "C:\\Users\\atram\\.nuget\\packages\\",
-        "outputPath": "D:\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\obj\\",
+        "outputPath": "C:\\Users\\atram\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\atram\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -37,6 +37,12 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

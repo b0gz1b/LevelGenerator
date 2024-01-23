@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "r+ui3Wxw64jMcgIXzVs7iCDQg8z1VYFsdiomPkJy9oh1XHSaBVslC0UOwyUDUpQ60gmc2MaWBoszY4vgL67CKQ==",
+  "dgSpecHash": "lQvB9qt7EHWSqHgePDykOGIok7eYn+LTeW/o5S0gZls1+j8syVOslCIki0Gj+bhKeuGbzws2P7cLxUdWN8nU+A==",
   "success": true,
-  "projectFilePath": "D:\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\LevelGeneratorConsole.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\atram\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\LevelGeneratorConsole.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\atram\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
   "logs": []
 }
