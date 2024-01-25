@@ -1,4 +1,6 @@
-public class Tuple<T1, T2>
+using System;
+
+public class Tuple<T1, T2> : IEquatable<Tuple<T1, T2>>
 {
     public T1 First { get; private set; }
     public T2 Second { get; private set; }
@@ -8,6 +10,22 @@ public class Tuple<T1, T2>
     {
         First = first;
         Second = second;
+    }
+
+    public bool Equals(Tuple<T1, T2> other)
+    {
+        if (other == null) return false;
+        if (First == null)
+        {
+            if (other.First != null) return false;
+        }
+        else if (!First.Equals(other.First)) return false;
+        if (Second == null)
+        {
+            if (other.Second != null) return false;
+        }
+        else if (!Second.Equals(other.Second)) return false;
+        return true;
     }
 }
 

@@ -454,7 +454,7 @@ public class Panel
                     else
                     {
                         for(int i = 0; i < regions.Count; i++){
-                            if(regions[i].Contains(new Tuple<int, int>(row, col))){
+                            if(Utils.TupleListContains(regions[i], new Tuple<int, int>(row, col))){
                                 Console.Write(i + " ");
                             }
                         }
