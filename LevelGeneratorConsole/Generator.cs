@@ -17,7 +17,7 @@ static class Generator
             puzzlePanel.RandomStartEndCOVR();
             // Console.WriteLine("Start and end: " + puzzlePanel.GetStart().First + ", " + puzzlePanel.GetStart().Second + " - " + puzzlePanel.GetEnd().First + ", " + puzzlePanel.GetEnd().Second);
             // Debug: print the panel
-            puzzlePanel.PrintPanel(printStartEnd : true);
+            // puzzlePanel.PrintPanel(printStartEnd : true);
             // Place random walls
             bool walls_valid = false;
             System.Random random = new System.Random();

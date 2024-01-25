@@ -19,7 +19,7 @@ class PlayerPath{
         }
         // Check if the placement is next to the last point in the path
         if(points.Count > 0){
-            Tuple<int, int> pointToBeAdded = new(indexRow, indexCol);
+            Tuple<int, int> pointToBeAdded = new Tuple<int, int>(indexRow, indexCol);
             Tuple<int, int> last = Utils.Last(points);
             if(Utils.TupleListContains(points, pointToBeAdded)){
                 return false; // The node is already in the path
@@ -33,7 +33,7 @@ class PlayerPath{
                 return false; // The placement is not next to the last point in the path
             }
             // Compute the index of the edge to be added to link the last point in the path to the new point
-            Tuple<int, int> edgeToBeAdded = new((last.Item1 + indexRow) / 2, (last.Item2 + indexCol) / 2);
+            Tuple<int, int> edgeToBeAdded = new Tuple<int, int>((last.Item1 + indexRow) / 2, (last.Item2 + indexCol) / 2);
             // Check if the edge to be added is already in the path
             if(Utils.TupleListContains(points, edgeToBeAdded))
             {
