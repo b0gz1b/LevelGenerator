@@ -1,6 +1,5 @@
-using System.Diagnostics;
-using System.Text;
-using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
 
 public class Panel
 {
@@ -23,99 +22,72 @@ public class Panel
         end = panel.GetEnd();
         for(int row = 0; row < grid.GetLength(0); row++){
             for(int col = 0; col < grid.GetLength(1); col++){
-                if(panel.GetGrid()[row, col] is not null){
+                if(panel.GetGrid()[row, col] != null){
                     grid[row, col] = panel.GetGrid()[row, col].Copy();
                 }
             }
         }
     }
 
-    public Panel(string filePath)
+    public Tuple<int, int> GetStart()
     {
-        // Read the JSON file
-        string json = File.ReadAllText(filePath);
-
-        // Parse the JSON file
-        JObject jObject = JObject.Parse(json);
-
-        // Get the grid size
-        int nRows = ((int)jObject["Panel"]["GridSize"]["Rows"] - 1) / 2;
-        int nCols = ((int)jObject["Panel"]["GridSize"]["Cols"] - 1) / 2;
-
-        // Initialize the grid with the specified dimensions
-        grid = new IPuzzleSymbol[2 * nRows + 1, 2 * nCols + 1];
-
-        // Get the grid
-        JArray jGrid = (JArray)jObject["Panel"]["Grid"];
-
-        // Place the symbols on the panel
-        foreach (JObject jSymbol in jGrid)
-        {
-            // Get the symbol type
-            string symbolType = (string)jSymbol["Type"];
-
-            // Get the symbol color
-            int colorId = (int)jSymbol["ColorId"];
-
-            // Get the symbol position
-            int row = (int)jSymbol["Position"]["Row"];
-            int col = (int)jSymbol["Position"]["Col"];
-
-            // Place the symbol on the panel
-            switch (symbolType)
-            {
-                case "Wall":
-                    grid[row, col] = new Wall();
-                    break;
-                case "Hexagon":
-                    grid[row, col] = new Hexagon();
-                    break;
-                case "Square":
-                    grid[row, col] = new Square(colorId);
-                    break;
-                case "Sun":
-                    grid[row, col] = new Sun(colorId);
-                    break;
-            }
-        }
-        start = new Tuple<int, int>((int)jObject["Panel"]["Start"]["Row"], (int)jObject["Panel"]["Start"]["Col"]);
-        end = new Tuple<int, int>((int)jObject["Panel"]["End"]["Row"], (int)jObject["Panel"]["End"]["Col"]);
+        return start;
     }
 
-
-    public void PlaceSymbol(IPuzzleSymbol symbol, int indexRow, int indexCol)
+    public Tuple<int, int> GetEnd()
     {
-        // Check if the placement is within the bounds of the panel
-        if (indexCol < 0 || indexCol > grid.GetLength(1) - 1 || indexRow < 0 || indexRow > grid.GetLength(0) - 1)
-        {
-            throw new ArgumentOutOfRangeException("indexCol, indexRow");
-        }
-
-        // Place the symbol on the panel
-        grid[indexRow, indexCol] = symbol;
-
-        // Call the symbol's PlaceSymbol method with the correct dimensions
-        symbol.PlaceSymbol(indexCol, indexRow, grid.GetLength(1), grid.GetLength(0));
+        return end;
     }
 
-    public void RemoveSymbol(int indexRow, int indexCol)
+    public IPuzzleSymbol[,] GetGrid()
     {
-        // Check if the placement is within the bounds of the panel
-        if (indexCol < 0 || indexCol > grid.GetLength(1) - 1 || indexRow < 0 || indexRow > grid.GetLength(0) - 1)
-        {
-            throw new ArgumentOutOfRangeException("indexCol, indexRow");
-        }
-
-        // Remove the symbol from the panel
-        grid[indexRow, indexCol] = default!;
+        return grid;
     }
 
-    public bool IsPointValid(int indexRow, int indexCol) => !(indexCol < 0 || indexCol > grid.GetLength(1) - 1 || indexRow < 0 || indexRow > grid.GetLength(0) - 1);
+    public void SetStart(int indexRow, int indexCol)
+    {
+        // Check if the placement is valid
+        CheckStartEndValidity(indexRow, indexCol);
+        // Set the start position
+        start = new Tuple<int, int>(indexRow, indexCol);
+    }
+
+    public void SetEnd(int indexRow, int indexCol)
+    {
+        // Check if the placement is valid
+        CheckStartEndValidity(indexRow, indexCol);
+        // Set the end position
+        end = new Tuple<int, int>(indexRow, indexCol);
+    }
+
+    public void SetStart(Tuple<int, int> tuple)
+    {
+        SetStart(tuple.First, tuple.Second);
+    }
+
+    public void SetEnd(Tuple<int, int> tuple)
+    {
+        SetEnd(tuple.First, tuple.Second);
+    }
+
+    public void RandomStartEndCOVR(){
+        // For COVR we want only starts on the bottom row and ends on the top row
+        System.Random random = new System.Random();
+        int row = grid.GetLength(0) - 1;
+        int col = random.Next((grid.GetLength(1)+1)/2) * 2;
+        start = new Tuple<int, int>(row, col);
+        SetStart(start);
+        row = 0;
+        col = random.Next((grid.GetLength(1)+1)/2) * 2;
+        end = new Tuple<int, int>(row, col);
+        SetEnd(end);
+    }
+
     private void CheckStartEndValidity(int indexRow, int indexCol)
     {
         // Check if the placement is within the bounds of the panel
         if(!IsPointValid(indexRow, indexCol)){
-            Debug.WriteLine(indexRow + " " + indexCol);
+            // UnityEngine.Debug.Log(indexRow + " " + indexCol);
             throw new ArgumentOutOfRangeException("indexCol, indexRow");
         }
         // Check if the placement is on a node
@@ -129,18 +101,11 @@ public class Panel
             throw new Exception("Invalid placement");
         }
     }
-    public void SetStart(int indexRow, int indexCol)
-    {
-        // Check if the placement is valid
-        CheckStartEndValidity(indexRow, indexCol);
-        // Set the start position
-        start = new Tuple<int, int>(indexRow, indexCol);
-    }
 
     public Tuple<int, int> RandomStartEnd()
     {
         // Draw if the start position is freely on a row or a column, the other one being -1 or the lenght complementing the other one
-        Random random = new();
+        System.Random random = new System.Random();
         int rowOrCol = random.Next(2);
         if (rowOrCol == 0)
         {
@@ -174,25 +139,229 @@ public class Panel
         }
     }
 
-    public void RandomStartEndCOVR(){
-        // For COVR we want only starts on the bottom row and ends on the top row
-        Random random = new();
-        int row = grid.GetLength(0) - 1;
-        int col = random.Next((grid.GetLength(1)+1)/2) * 2;
-        start = new Tuple<int, int>(row, col);
-        SetStart(start);
-        row = 0;
-        col = random.Next((grid.GetLength(1)+1)/2) * 2;
-        end = new Tuple<int, int>(row, col);
-        SetEnd(end);
+    public bool IsPointValid(int indexRow, int indexCol){
+        // Check if the placement is within the bounds of the panel
+        if (indexCol < 0 || indexCol > grid.GetLength(1) - 1 || indexRow < 0 || indexRow > grid.GetLength(0) - 1)
+        {
+            return false;
+        }
+        return true;
     }
 
-    public void SetEnd(int indexRow, int indexCol)
+    public void PlaceSymbol(IPuzzleSymbol symbol, int indexRow, int indexCol)
     {
-        // Check if the placement is valid
-        CheckStartEndValidity(indexRow, indexCol);
-        // Set the end position
-        end = new Tuple<int, int>(indexRow, indexCol);
+        // Check if the placement is within the bounds of the panel
+        if (indexCol < 0 || indexCol > grid.GetLength(1) - 1 || indexRow < 0 || indexRow > grid.GetLength(0) - 1)
+        {
+            throw new ArgumentOutOfRangeException("indexCol, indexRow");
+        }
+
+        // Place the symbol on the panel
+        grid[indexRow, indexCol] = symbol;
+
+        // Call the symbol's PlaceSymbol method with the correct dimensions
+        symbol.PlaceSymbol(indexCol, indexRow, grid.GetLength(1), grid.GetLength(0));
+    }
+
+    public void RemoveSymbol(int indexRow, int indexCol)
+    {
+        // Check if the placement is within the bounds of the panel
+        if (indexCol < 0 || indexCol > grid.GetLength(1) - 1 || indexRow < 0 || indexRow > grid.GetLength(0) - 1)
+        {
+            throw new ArgumentOutOfRangeException("indexCol, indexRow");
+        }
+
+        // Remove the symbol from the panel
+        grid[indexRow, indexCol] = default!;
+    }
+
+    public IPuzzleSymbol GetSymbol(int indexRow, int indexCol)
+    {
+        // Check if the placement is within the bounds of the panel
+        if (indexCol < 0 || indexCol > grid.GetLength(1) - 1 || indexRow < 0 || indexRow > grid.GetLength(0) - 1)
+        {
+            throw new ArgumentOutOfRangeException("indexCol, indexRow");
+        }
+
+        // Return the symbol from the panel
+        return grid[indexRow, indexCol];
+    }
+    public List<Tuple<int, int>> GetNeighbourNodes(int indexRow, int indexCol)
+    {
+        // Check if the node is within the bounds of the panel
+        if(!IsPointValid(indexRow, indexCol)){
+            throw new ArgumentOutOfRangeException("indexCol, indexRow");
+        }
+        // Check if the node is a node
+        if (indexCol % 2 != 0 || indexRow % 2 != 0)
+        {
+            throw new Exception("Invalid placement");
+        }
+
+        // Initialize the list of all possible neighbour nodes not separated by a wall
+        List<Tuple<int, int>> neighbourNodes = new List<Tuple<int, int>>();
+        if(IsPointValid(indexRow - 2, indexCol) && !(grid[indexRow - 1, indexCol] is Wall)){
+            neighbourNodes.Add(new Tuple<int, int>(indexRow - 2, indexCol));
+        }
+        if(IsPointValid(indexRow + 2, indexCol) && !(grid[indexRow + 1, indexCol] is Wall)){
+            neighbourNodes.Add(new Tuple<int, int>(indexRow + 2, indexCol));
+        }
+        if(IsPointValid(indexRow, indexCol - 2) && !(grid[indexRow, indexCol - 1] is Wall)){
+            neighbourNodes.Add(new Tuple<int, int>(indexRow, indexCol - 2));
+        }
+        if(IsPointValid(indexRow, indexCol + 2) && !(grid[indexRow, indexCol + 1] is Wall)){
+            neighbourNodes.Add(new Tuple<int, int>(indexRow, indexCol + 2));
+        }
+        
+        return neighbourNodes;
+    }
+
+    public List<Tuple<int, int>> GetNeighbourPillars(int indexRow, int indexCol)
+    {
+        // Check if the point is within the bounds of the panel
+        if(!IsPointValid(indexRow, indexCol)){
+            throw new ArgumentOutOfRangeException("indexCol, indexRow");
+        }
+        // Check if the point is a pillar
+        if (indexCol % 2 == 0 || indexRow % 2 == 0)
+        {
+            throw new Exception("Invalid placement");
+        }
+
+        // Initialize the list of all possible neighbour pillars
+        List<Tuple<int, int>> neighbourPillars = new List<Tuple<int, int>>();
+        if(IsPointValid(indexRow - 2, indexCol)){
+            neighbourPillars.Add(new Tuple<int, int>(indexRow - 2, indexCol));
+        }
+        if(IsPointValid(indexRow + 2, indexCol)){
+            neighbourPillars.Add(new Tuple<int, int>(indexRow + 2, indexCol));
+        }
+        if(IsPointValid(indexRow, indexCol - 2)){
+            neighbourPillars.Add(new Tuple<int, int>(indexRow, indexCol - 2));
+        }
+        if(IsPointValid(indexRow, indexCol + 2)){
+            neighbourPillars.Add(new Tuple<int, int>(indexRow, indexCol + 2));
+        }
+        
+        return neighbourPillars;
+    }
+
+    public List<Tuple<int, int>> GetHexagonPositions()
+    {
+        // Initialize the list of all hexagon positions
+        List<Tuple<int, int>> hexagonPositions = new List<Tuple<int, int>>();
+        for (int row = 0; row < grid.GetLength(0); row++)
+        {
+            for (int col = 0; col < grid.GetLength(1); col++)
+            {
+                if (grid[row, col] is Hexagon)
+                {
+                    hexagonPositions.Add(new Tuple<int, int>(row, col));
+                }
+            }
+        }
+        return hexagonPositions;
+    }
+
+    public List<Tuple<int, int>> GetWallPositions()
+    {
+        // Initialize the list of all wall positions
+        List<Tuple<int, int>> wallPositions = new List<Tuple<int, int>>();
+        for (int row = 0; row < grid.GetLength(0); row++)
+        {
+            for (int col = 0; col < grid.GetLength(1); col++)
+            {
+                if (grid[row, col] is Wall)
+                {
+                    wallPositions.Add(new Tuple<int, int>(row, col));
+                }
+            }
+        }
+        return wallPositions;
+    }
+
+    public List<Tuple<int, int>> GetSunPositions()
+    {
+        // Initialize the list of all sun positions
+        List<Tuple<int, int>> sunPositions = new List<Tuple<int, int>>();
+        for (int row = 0; row < grid.GetLength(0); row++)
+        {
+            for (int col = 0; col < grid.GetLength(1); col++)
+            {
+                if (grid[row, col] is Sun)
+                {
+                    sunPositions.Add(new Tuple<int, int>(row, col));
+                }
+            }
+        }
+        return sunPositions;
+    }
+
+    public List<Tuple<int, int>> GetSquarePositions()
+    {
+        // Initialize the list of all square positions
+        List<Tuple<int, int>> squarePositions = new List<Tuple<int, int>>();
+        for (int row = 0; row < grid.GetLength(0); row++)
+        {
+            for (int col = 0; col < grid.GetLength(1); col++)
+            {
+                if (grid[row, col] is Square)
+                {
+                    squarePositions.Add(new Tuple<int, int>(row, col));
+                }
+            }
+        }
+        return squarePositions;
+    }
+
+    public List<List<Tuple<int, int>>> GetRegions(List<Tuple<int,int>> path)
+    {
+        // Get the regions a path splits the panel into
+        // A region is a list of nodes that are not separated by the path, meaning a path can be drawn between any two nodes in the region regardless of the walls
+        List<Tuple<int, int>> dfs_pillars(int indexRow, int indexCol){
+            // Depth-first search to find all the pillars in the region
+            List<Tuple<int, int>> pillars = new List<Tuple<int, int>>();
+            Stack<Tuple<int, int>> stack = new Stack<Tuple<int, int>>();
+            stack.Push(new Tuple<int, int>(indexRow, indexCol));
+            // Write the path
+            // foreach(Tuple<int, int> point in path){
+            //     Console.WriteLine(point.First + " " + point.Second);
+            // }
+            while(stack.Count > 0){ 
+                // Console.WriteLine("stack.Count: " + stack.Count);
+                Tuple<int, int> current = stack.Pop();
+                if(!Utils.TupleListContains(pillars, current)){
+                    pillars.Add(current);
+                    foreach(Tuple<int, int> neighbour in GetNeighbourPillars(current.First, current.Second)){
+                        // find the edge between the current pillar and the neighbour pillar
+                        Tuple<int, int> edge = new Tuple<int, int>((current.First + neighbour.First) / 2, (current.Second + neighbour.Second) / 2);
+                        
+                        if(!Utils.TupleListContains(path, edge)){
+                            stack.Push(neighbour);
+                        }
+                    }
+                }
+            }
+            return pillars;
+
+        }
+        List<List<Tuple<int, int>>> regions = new List<List<Tuple<int, int>>>();
+        List<Tuple<int, int>> not_visited = new List<Tuple<int, int>>();
+        for(int row = 1; row < grid.GetLength(0) - 1; row+=2){
+            for(int col = 1; col < grid.GetLength(1) - 1; col+=2){
+                not_visited.Add(new Tuple<int, int>(row, col));
+            }
+        }
+        // Depth-first search to find all the regions using auxiliary function dfs_pillars
+        while(not_visited.Count > 0){
+            Console.WriteLine("not_visited.Count: " + not_visited.Count);
+            List<Tuple<int, int>> pillars = dfs_pillars(not_visited[0].First, not_visited[0].Second);
+            foreach(Tuple<int, int> pillar in pillars){
+                Utils.TupleListRemove(not_visited, pillar);
+            }
+            regions.Add(pillars);
+        }
+        return regions;
     }
 
     public void PrintPanel(bool printStartEnd = false)
@@ -202,9 +371,9 @@ public class Panel
         {
             for (int col = 0; col < grid.GetLength(1); col++)
             {
-                if (printStartEnd && row == start.Item1 + 1 && col == start.Item2)
+                if (printStartEnd && row == start.First + 1 && col == start.Second)
                     Console.Write("S ");
-                else if (printStartEnd && row == end.Item1 -1 && col == end.Item2)
+                else if (printStartEnd && row == end.First -1 && col == end.Second)
                     Console.Write("E ");
                 else if (row == -1 || row == grid.GetLength(0))
                     Console.Write("  ");
@@ -237,190 +406,13 @@ public class Panel
         }
     }
 
-    public List<Tuple<int, int>> GetNeighbourNodes(int indexRow, int indexCol)
+    public void PrintRegions(List<Tuple<int, int>> points)
     {
-        // Check if the node is within the bounds of the panel
-        if(!IsPointValid(indexRow, indexCol)){
-            throw new ArgumentOutOfRangeException("indexCol, indexRow");
-        }
-        // Check if the node is a node
-        if (indexCol % 2 != 0 || indexRow % 2 != 0)
-        {
-            throw new Exception("Invalid placement");
-        }
-
-        // Initialize the list of all possible neighbour nodes not separated by a wall
-        List<Tuple<int, int>> neighbourNodes = new();
-        if(IsPointValid(indexRow - 2, indexCol) && grid[indexRow - 1, indexCol] is not Wall){
-            neighbourNodes.Add(new Tuple<int, int>(indexRow - 2, indexCol));
-        }
-        if(IsPointValid(indexRow + 2, indexCol) && grid[indexRow + 1, indexCol] is not Wall){
-            neighbourNodes.Add(new Tuple<int, int>(indexRow + 2, indexCol));
-        }
-        if(IsPointValid(indexRow, indexCol - 2) && grid[indexRow, indexCol - 1] is not Wall){
-            neighbourNodes.Add(new Tuple<int, int>(indexRow, indexCol - 2));
-        }
-        if(IsPointValid(indexRow, indexCol + 2) && grid[indexRow, indexCol + 1] is not Wall){
-            neighbourNodes.Add(new Tuple<int, int>(indexRow, indexCol + 2));
-        }
-        
-        return neighbourNodes;
-    }
-
-    public List<Tuple<int, int>> GetNeighbourPillars(int indexRow, int indexCol)
-    {
-        // Check if the point is within the bounds of the panel
-        if(!IsPointValid(indexRow, indexCol)){
-            throw new ArgumentOutOfRangeException("indexCol, indexRow");
-        }
-        // Check if the point is a pillar
-        if (indexCol % 2 == 0 || indexRow % 2 == 0)
-        {
-            throw new Exception("Invalid placement");
-        }
-
-        // Initialize the list of all possible neighbour pillars
-        List<Tuple<int, int>> neighbourPillars = new();
-        if(IsPointValid(indexRow - 2, indexCol)){
-            neighbourPillars.Add(new Tuple<int, int>(indexRow - 2, indexCol));
-        }
-        if(IsPointValid(indexRow + 2, indexCol)){
-            neighbourPillars.Add(new Tuple<int, int>(indexRow + 2, indexCol));
-        }
-        if(IsPointValid(indexRow, indexCol - 2)){
-            neighbourPillars.Add(new Tuple<int, int>(indexRow, indexCol - 2));
-        }
-        if(IsPointValid(indexRow, indexCol + 2)){
-            neighbourPillars.Add(new Tuple<int, int>(indexRow, indexCol + 2));
-        }
-        
-        return neighbourPillars;
-    }
-
-
-    public Tuple<int, int> GetStart()
-    {
-        return start;
-    }
-
-    public Tuple<int, int> GetEnd()
-    {
-        return end;
-    }
-
-    public IPuzzleSymbol[,] GetGrid()
-    {
-        return grid;
-    }
-
-    public void PrintPath(List<Tuple<int, int>> points){
-        // Just print the path on the panel without any other symbols or start/end positions
-        bool[,] pathGrid = new bool[grid.GetLength(0), grid.GetLength(1)];
-        foreach(Tuple<int, int> point in points){
-            pathGrid[point.Item1, point.Item2] = true;
-        }
-        for (int row = 0; row < grid.GetLength(0); row++)
-        {
-            for (int col = 0; col < grid.GetLength(1); col++)
-            {
-                if(pathGrid[row, col]){
-                    // S for start, E for end, * in between
-                    if(row == start.Item1 && col == start.Item2){
-                        Console.Write("S ");
-                    }
-                    else if(row == end.Item1 && col == end.Item2){
-                        Console.Write("E ");
-                    }
-                    else if (grid[row, col] is Hexagon){
-                        Console.Write(grid[row, col].GetSymbol() + " ");
-                    }
-                    else{
-                        Console.Write("* ");
-                    }
-                }
-                else
-                {
-                    if (grid[row, col] is Wall)
-                    {
-                        Console.Write(grid[row, col].GetSymbol() + " ");
-                    }
-                    else if (row % 2 == 0 && col % 2 == 0)
-                    {
-                        Console.Write(". ");
-                    }
-                    else if (row % 2 != col % 2)
-                    {
-                        if (row % 2 == 0)
-                        {
-                            Console.Write("- ");
-                        }
-                        else
-                        {
-                            Console.Write("| ");
-                        }
-                    }
-                    else
-                    {
-                        if(grid[row, col] is not null){
-                            Console.Write(grid[row, col].GetSymbol() + " ");
-                        }
-                        else{
-                            Console.Write("O ");
-                        }
-                    }
-                }
-            }
-            Console.WriteLine();
-        }
-    }
-
-    public List<List<Tuple<int, int>>> GetRegions(List<Tuple<int,int>> path){
-        // Get the regions a path splits the panel into
-        // A region is a list of nodes that are not separated by the path, meaning a path can be drawn between any two nodes in the region regardless of the walls
-        List<Tuple<int, int>> dfs_pillars(int indexRow, int indexCol){
-            // Depth-first search to find all the pillars in the region
-            List<Tuple<int, int>> pillars = new();
-            Stack<Tuple<int, int>> stack = new();
-            stack.Push(new Tuple<int, int>(indexRow, indexCol));
-            while(stack.Count > 0){
-                Tuple<int, int> current = stack.Pop();
-                if(!pillars.Contains(current)){
-                    pillars.Add(current);
-                    foreach(Tuple<int, int> neighbour in GetNeighbourPillars(current.Item1, current.Item2)){
-                        // find the edge between the current pillar and the neighbour pillar
-                        Tuple<int, int> edge = new((current.Item1 + neighbour.Item1) / 2, (current.Item2 + neighbour.Item2) / 2);
-                        if(!path.Contains(edge)){
-                            stack.Push(neighbour);
-                        }
-                    }
-                }
-            }
-            return pillars;
-
-        }
-        List<List<Tuple<int, int>>> regions = new();
-        List<Tuple<int, int>> not_visited = new();
-        for(int row = 1; row < grid.GetLength(0) - 1; row+=2){
-            for(int col = 1; col < grid.GetLength(1) - 1; col+=2){
-                not_visited.Add(new Tuple<int, int>(row, col));
-            }
-        }
-        // Depth-first search to find all the regions using auxiliary function dfs_pillars
-        while(not_visited.Count > 0){
-            List<Tuple<int, int>> pillars = dfs_pillars(not_visited[0].Item1, not_visited[0].Item2);
-            foreach(Tuple<int, int> pillar in pillars){
-                not_visited.Remove(pillar);
-            }
-            regions.Add(pillars);
-        }
-        return regions;
-    }
-
-    public void PrintRegions(List<Tuple<int, int>> points){
+        // Debug
         bool[,] pathGrid = new bool[grid.GetLength(0), grid.GetLength(1)];
         List<List<Tuple<int, int>>> regions = GetRegions(points);
         foreach(Tuple<int, int> point in points){
-            pathGrid[point.Item1, point.Item2] = true;
+            pathGrid[point.First, point.Second] = true;
         }
         for (int row = 0; row < grid.GetLength(0); row++)
         {
@@ -428,10 +420,10 @@ public class Panel
             {
                 if(pathGrid[row, col]){
                     // S for start, E for end, * in between
-                    if(row == start.Item1 && col == start.Item2){
+                    if(row == start.First && col == start.Second){
                         Console.Write("S ");
                     }
-                    else if(row == end.Item1 && col == end.Item2){
+                    else if(row == end.First && col == end.Second){
                         Console.Write("E ");
                     }
                     else{
@@ -473,66 +465,64 @@ public class Panel
         }
     }
 
-    public void SetStart(Tuple<int, int> tuple)
-    {
-        SetStart(tuple.Item1, tuple.Item2);
-    }
-
-    public void SetEnd(Tuple<int, int> tuple)
-    {
-        SetEnd(tuple.Item1, tuple.Item2);
-    }
-
-    internal void WriteToFile(string filePath)
-    {
-        try
+    public void PrintPath(List<Tuple<int, int>> points){
+        // Just print the path on the panel without any other symbols or start/end positions
+        bool[,] pathGrid = new bool[grid.GetLength(0), grid.GetLength(1)];
+        foreach(Tuple<int, int> point in points){
+            pathGrid[point.First, point.Second] = true;
+        }
+        for (int row = 0; row < grid.GetLength(0); row++)
         {
-            StringBuilder jsonBuilder = new StringBuilder();
-            jsonBuilder.AppendLine("{");
-            jsonBuilder.AppendLine("\t\"Panel\": {");
-            jsonBuilder.AppendLine($"\t\t\"GridSize\": {{\"Rows\": {grid.GetLength(0)}, \"Cols\": {grid.GetLength(1)}}},");
-            jsonBuilder.AppendLine("\t\t\"Grid\": [");
-
-            // Write grid
-            for (int row = 0; row < grid.GetLength(0); row++)
+            for (int col = 0; col < grid.GetLength(1); col++)
             {
-                for (int col = 0; col < grid.GetLength(1); col++)
+                if(pathGrid[row, col]){
+                    // S for start, E for end, * in between
+                    if(row == start.First && col == start.Second){
+                        Console.Write("S ");
+                    }
+                    else if(row == end.First && col == end.Second){
+                        Console.Write("E ");
+                    }
+                    else if (grid[row, col] is Hexagon){
+                        Console.Write(grid[row, col].GetSymbol() + " ");
+                    }
+                    else{
+                        Console.Write("* ");
+                    }
+                }
+                else
                 {
-                    if (grid[row, col] is not null)
+                    if (grid[row, col] is Wall)
                     {
-                        jsonBuilder.AppendLine("\t\t\t{");
-                        IPuzzleSymbol symbol = grid[row, col];
-
-                        if (symbol != null)
+                        Console.Write(grid[row, col].GetSymbol() + " ");
+                    }
+                    else if (row % 2 == 0 && col % 2 == 0)
+                    {
+                        Console.Write(". ");
+                    }
+                    else if (row % 2 != col % 2)
+                    {
+                        if (row % 2 == 0)
                         {
-                            jsonBuilder.AppendLine($"\t\t\t\t\"Type\": \"{symbol.Name}\",");
-                            jsonBuilder.AppendLine($"\t\t\t\t\"ColorId\": {symbol.GetColorId()},");
-                            jsonBuilder.AppendLine($"\t\t\t\t\"Position\": {{\"Row\": {row}, \"Col\": {col}}}");
+                            Console.Write("- ");
                         }
-
-                        jsonBuilder.AppendLine("\t\t\t},");
+                        else
+                        {
+                            Console.Write("| ");
+                        }
+                    }
+                    else
+                    {
+                        if(grid[row, col] != null){
+                            Console.Write(grid[row, col].GetSymbol() + " ");
+                        }
+                        else{
+                            Console.Write("O ");
+                        }
                     }
                 }
             }
-
-            // Remove the trailing comma if there are items in the grid
-            if (jsonBuilder.Length > 0)
-            {
-                jsonBuilder.Remove(jsonBuilder.Length - 3, 1);
-            }
-
-            jsonBuilder.AppendLine("\t\t],");
-            jsonBuilder.AppendLine($"\t\t\"Start\": {{\"Row\": {start.Item1}, \"Col\": {start.Item2}}},");
-            jsonBuilder.AppendLine($"\t\t\"End\": {{\"Row\": {end.Item1}, \"Col\": {end.Item2}}}");
-            jsonBuilder.AppendLine("\t}");
-            jsonBuilder.AppendLine("}");
-
-            File.WriteAllText(filePath, jsonBuilder.ToString());
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Error writing JSON file: {e.Message}");
+            Console.WriteLine();
         }
     }
-
 }

@@ -1,4 +1,6 @@
-class LevelGeneratorProgram
+﻿using System;
+using System.Collections.Generic;
+class Program
 {
     static void Main(string[] args)
     {
@@ -10,8 +12,8 @@ class LevelGeneratorProgram
             int n_walls = int.Parse(args[2]);
             int n_hexagons = int.Parse(args[3]);
             int n_colors = int.Parse(args[4]);
-            List<int> n_square_by_color = new();
-            List<int> n_sun_by_color = new();
+            List<int> n_square_by_color = new List<int>();
+            List<int> n_sun_by_color = new List<int>();
             for (int i = 0; i < n_colors; i++)
             {
                 n_square_by_color.Add(int.Parse(args[5 + i]));
@@ -21,17 +23,10 @@ class LevelGeneratorProgram
                 n_sun_by_color.Add(int.Parse(args[5 + n_colors + i]));
             }
 
-            Path path = Generator.GenerateLevel(n_rows, n_cols, n_walls, n_hexagons, n_colors, n_square_by_color, n_sun_by_color);
+            Console.WriteLine("Level generating");
+            PlayerPath path = Generator.GenerateLevel(n_rows, n_cols, n_walls, n_hexagons, n_colors, n_square_by_color, n_sun_by_color);
             path.PrintPath();
             path.PrintPanel();
-            path.WriteToFiles(args[5 + 2 * n_colors], args[6 + 2 * n_colors]);
-        }
-        else if(args.Length == 2){
-            string filePanelPath = args[0];
-            string filePointsPath = args[1];
-            Path path = new Path(filePanelPath, filePointsPath);
-            int[] result = path.isPathValid();
-            Console.WriteLine(result[0] + " " + result[1] + " " + result[2]);
         }
     }
 }

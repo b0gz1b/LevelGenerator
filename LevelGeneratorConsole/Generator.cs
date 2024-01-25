@@ -1,32 +1,39 @@
-using System.Runtime.CompilerServices;
-
+using System;
+using System.Collections.Generic;
 static class Generator
 {
-    public static Path GenerateLevel(int nRows, int nCols, int nWalls, int nHexagon, int nColors, List<int> nSquareByColor, List<int> nSunByColor)
+    public static PlayerPath GenerateLevel(int nRows, int nCols, int nWalls, int nHexagon, int nColors, List<int> nSquareByColor, List<int> nSunByColor)
     {
-        Panel puzzlePanel = new(nRows, nCols);
-        Path randomPath = new(puzzlePanel);
+        Panel puzzlePanel = new Panel(nRows, nCols);
+        PlayerPath randomPath = new PlayerPath(puzzlePanel);
         bool is_valid = false;
-        int maxIteration = 10000;
+        int maxIteration = 1000;
+        
         while(!is_valid && maxIteration-- > 0){
-            puzzlePanel = new(nRows, nCols);
-            randomPath = new(puzzlePanel);
+            puzzlePanel = new Panel(nRows, nCols);
+            randomPath = new PlayerPath(puzzlePanel);
             // Place random start and end positions
+            Console.WriteLine("Start and end: " + puzzlePanel.GetStart().First + ", " + puzzlePanel.GetStart().Second + " - " + puzzlePanel.GetEnd().First + ", " + puzzlePanel.GetEnd().Second);
             puzzlePanel.RandomStartEndCOVR();
+            Console.WriteLine("Start and end: " + puzzlePanel.GetStart().First + ", " + puzzlePanel.GetStart().Second + " - " + puzzlePanel.GetEnd().First + ", " + puzzlePanel.GetEnd().Second);
             // Debug: print the panel
-            // puzzlePanel.PrintPanel(printStartEnd : true);
+            puzzlePanel.PrintPanel(printStartEnd : true);
             // Place random walls
             bool walls_valid = false;
-            Random random = new();
+            System.Random random = new System.Random();
             while (!walls_valid)
             {
+                // Debug
+                Console.WriteLine("Trying to place walls");
                 for (int i = 0; i < nWalls; i++)
                 {
-                    Wall wall = new();
+                    Wall wall = new Wall();
                     int indexCol;
                     int indexRow;
                     do
                     {
+                        // Debug
+                        Console.WriteLine("\t Trying to place wall " + i);
                         int a = random.Next(0, (puzzlePanel.GetGrid().GetLength(0) + 1) / 2);
                         int b = random.Next(0, (puzzlePanel.GetGrid().GetLength(1) - 1) / 2);
                         if (random.Next(2) == 0)
@@ -43,38 +50,46 @@ static class Generator
                     puzzlePanel.PlaceSymbol(wall, indexRow, indexCol);
                 }
                 // Generate a random path inside a try catch
+                randomPath = PlayerPath.GenerateRandomPath(puzzlePanel);
                 try
                 {
-                    randomPath = Path.GenerateRandomPath(puzzlePanel);
+                    randomPath = PlayerPath.GenerateRandomPath(puzzlePanel);
+                    // Debug 
+                    List<Tuple<int, int>> ccpoints = randomPath.GetPoints();
+                    // Debug: print the path
+                    Console.WriteLine("points.Count = " + ccpoints.Count);
                     walls_valid = true;
                 }
                 catch
                 {
                     walls_valid = false;
-                    puzzlePanel = new(nRows, nCols);
+                    puzzlePanel = new Panel(nRows, nCols);
                 }
             }
+            // Debug
+            Console.WriteLine("Walls placed");
             List<Tuple<int, int>> points = randomPath.GetPoints();
-            List<Tuple<int, int>> points_copy = new(points);
+            
+            List<Tuple<int, int>> points_copy = new List<Tuple<int, int>>(points);
             
             // Debug: print the path
-            // randomPath.PrintRegions();
-
+            randomPath.PrintRegions();
+            Console.WriteLine("Region printed");
             // Place hexagons randomly on the path
             for(int i = 0; i < nHexagon; i++){
-                Hexagon hexagon = new();
+                Hexagon hexagon = new Hexagon();
                 int index = random.Next(0,points_copy.Count);
-                puzzlePanel.PlaceSymbol(hexagon, randomPath.GetPoints()[index].Item1, randomPath.GetPoints()[index].Item2);
+                puzzlePanel.PlaceSymbol(hexagon, randomPath.GetPoints()[index].First, randomPath.GetPoints()[index].Second);
                 points_copy.RemoveAt(index);
             }
             // Debug: print the panel
-            // puzzlePanel.PrintPanel();
+            puzzlePanel.PrintPanel();
 
             List<List<Tuple<int, int>>> regions = puzzlePanel.GetRegions(points);
             int minNumberOfRegions = 0;
-            if(nSunByColor.Sum() > 0)
+            if(Utils.Sum(nSunByColor) > 0)
                 minNumberOfRegions += 1;
-            if(nSquareByColor.Sum() > 0)
+            if(Utils.Sum(nSquareByColor) > 0)
                 minNumberOfRegions += 1;
             minNumberOfRegions += nRows * nCols / 16;
             if(regions.Count >= nColors && regions.Count >= minNumberOfRegions){
@@ -93,9 +108,9 @@ static class Generator
                 }
                 // We know have the random orders of exploration of the regions and the pillars in each region
                 // We can now try to place the squares and the suns using backtracking
-                List<int> nSquareByColor_copy = new(nSquareByColor);
-                List<int> nSunByColor_copy = new(nSunByColor);
-                Panel puzzlePanelCopy = new(puzzlePanel);
+                List<int> nSquareByColor_copy = new List<int>(nSquareByColor);
+                List<int> nSunByColor_copy = new List<int>(nSunByColor);
+                Panel puzzlePanelCopy = new Panel(puzzlePanel);
                 // init at -1
                 int[] regionColor = new int[regions.Count];
                 for(int i = 0; i < regionColor.Length; i++){
@@ -114,14 +129,14 @@ static class Generator
                 
                 // Backtrack loop while we have not placed all the squares and suns
                 // Init the array that keeps track of pillars visited at each iteration to a list of empty lists
-                List<List<Tuple<bool,Tuple<int, int>>>> pillarsVisited = new(){new()};
+                List<List<Tuple<bool,Tuple<int, int>>>> pillarsVisited = new List<List<Tuple<bool, Tuple<int, int>>>>(){new List<Tuple<bool, Tuple<int, int>>>()};
                 int iteration = 0;
                 int maxIterationBacktrack = 5000;
                 int mustPlaceInSameRegionAsSun = -1;
                 int lastColor = -1;
-                while((nSquareByColor_copy.Sum() > 0 || nSunByColor_copy.Sum() > 0) && maxIterationBacktrack-- > 0){
+                while((Utils.Sum(nSquareByColor_copy) > 0 || Utils.Sum(nSunByColor_copy) > 0) && maxIterationBacktrack-- > 0){
                     // Debug
-                    // Console.WriteLine("Iteration " + iteration);
+                    Console.WriteLine("Iteration " + iteration);
                     
                     // Choose the region to place the square or sun
                     Utils.ShuffleArray(regionIndices);
@@ -134,10 +149,10 @@ static class Generator
                         bool isSquare;
                         if (regionIndex != -1)
                             isSquare = nSunByColor_copy[lastColor] == 0;
-                        else if(nSquareByColor_copy.Sum() > 0 && nSunByColor_copy.Sum() > 0)
+                        else if(Utils.Sum(nSquareByColor_copy) > 0 && Utils.Sum(nSunByColor_copy) > 0)
                             isSquare = random.Next(2) == 0;
                         else
-                            isSquare = nSquareByColor_copy.Sum() > 0;
+                            isSquare = Utils.Sum(nSquareByColor_copy) > 0;
                         
                         // Choose the color of the square or sun in the remaining colors
                         int color = -1;
@@ -185,24 +200,24 @@ static class Generator
                         for(int j = 0; j < pillarsIndices[regionIndex].Length; j++){
                             int pillarIndex = pillarsIndices[regionIndex][j];
 
-                            if(puzzlePanelCopy.GetGrid()[regions[regionIndex][pillarIndex].Item1, regions[regionIndex][pillarIndex].Item2] != null || pillarsVisited[iteration].Contains(new(isSquare, regions[regionIndex][pillarIndex]))){
+                            if(puzzlePanelCopy.GetGrid()[regions[regionIndex][pillarIndex].First, regions[regionIndex][pillarIndex].Second] != null || pillarsVisited[iteration].Contains(new Tuple<bool, Tuple<int, int>>(isSquare, regions[regionIndex][pillarIndex]))){
                                 // Debug
-                                // Console.WriteLine("\t\tPillar " + regions[regionIndex][pillarIndex] + " already visited or occupied");
+                                Console.WriteLine("\t\tPillar " + regions[regionIndex][pillarIndex] + " already visited or occupied");
                                 regionIndice++;
                                 continue;
                             }
 
                             if(isSquare){
-                                Square square = new(color);
-                                puzzlePanelCopy.PlaceSymbol(square, regions[regionIndex][pillarIndex].Item1, regions[regionIndex][pillarIndex].Item2);
+                                Square square = new Square(color);
+                                puzzlePanelCopy.PlaceSymbol(square, regions[regionIndex][pillarIndex].First, regions[regionIndex][pillarIndex].Second);
                                 squareCountByRegion[regionIndex]++;
                                 nSquareByColor_copy[color]--;
                                 regionColor[regionIndex] = color;
                                 mustPlaceInSameRegionAsSun = -1;
                             }
                             else{
-                                Sun sun = new(color);
-                                puzzlePanelCopy.PlaceSymbol(sun, regions[regionIndex][pillarIndex].Item1, regions[regionIndex][pillarIndex].Item2);
+                                Sun sun = new Sun(color);
+                                puzzlePanelCopy.PlaceSymbol(sun, regions[regionIndex][pillarIndex].First, regions[regionIndex][pillarIndex].Second);
                                 sunCountByRegionByColor[regionIndex][color]++;
                                 if(sunCountByRegionByColor[regionIndex][color] == 1 && (squareCountByRegion[regionIndex] == 0 || regionColor[regionIndex] != color))
                                     mustPlaceInSameRegionAsSun = regionIndex;
@@ -211,7 +226,7 @@ static class Generator
                                 nSunByColor_copy[color]--;
                             }
                             lastColor = color;
-                            pillarsVisited[iteration].Add(new(isSquare, regions[regionIndex][pillarIndex]));
+                            pillarsVisited[iteration].Add(new Tuple<bool, Tuple<int, int>>(isSquare, regions[regionIndex][pillarIndex]));
                             placed = true;
                             break;
                         }
@@ -219,14 +234,14 @@ static class Generator
                     }
                     if(!placed){
                         // Debug
-                        // Console.WriteLine("\t No pillar found, backtracking");
+                        Console.WriteLine("\t No pillar found, backtracking");
                         if(iteration == 0)
                             break;
                         else{
                             pillarsVisited.RemoveAt(iteration);
                             iteration--;
-                            bool isLastSquare = pillarsVisited[iteration][^1].Item1;
-                            Tuple<int, int> lastPillar = pillarsVisited[iteration][^1].Item2;
+                            bool isLastSquare = pillarsVisited[iteration][pillarsVisited[iteration].Count - 1].First;
+                            Tuple<int, int> lastPillar = pillarsVisited[iteration][pillarsVisited[iteration].Count - 1].Second;
                             // get the region index of the last pillar and color
                             int lastRegionIndex = -1;
                             int lastColorIt = -1;
@@ -246,7 +261,7 @@ static class Generator
                                 
                             }
                             else{
-                                lastColorIt = puzzlePanelCopy.GetGrid()[lastPillar.Item1, lastPillar.Item2].GetColorId();
+                                lastColorIt = puzzlePanelCopy.GetGrid()[lastPillar.First, lastPillar.Second].GetColorId();
                                 sunCountByRegionByColor[lastRegionIndex][lastColorIt]--;
                                 nSunByColor_copy[lastColorIt]++;
                             }
@@ -255,14 +270,15 @@ static class Generator
                                 mustPlaceInSameRegionAsSun = lastRegionIndex;
                             else
                                 mustPlaceInSameRegionAsSun = -1;
-                            puzzlePanelCopy.RemoveSymbol(lastPillar.Item1, lastPillar.Item2);
+                            puzzlePanelCopy.RemoveSymbol(lastPillar.First, lastPillar.Second);
                         }
                     }
-                    else if(nSquareByColor_copy.Sum() == 0 && nSunByColor_copy.Sum() == 0){
+                    else if(Utils.Sum(nSquareByColor_copy) == 0 && Utils.Sum(nSunByColor_copy) == 0){
                         // Debug
                         // Console.WriteLine("\t All squares and suns placed");
                         randomPath.SetPanel(puzzlePanelCopy);
                         int[] res = randomPath.isPathValid();
+                        is_valid = true;
                         foreach(int i in res){
                             if(i > 0){
                                 is_valid = false;
@@ -271,25 +287,10 @@ static class Generator
                     }
                     else{
                         iteration++;
-                        pillarsVisited.Add(new());
+                        pillarsVisited.Add(new List<Tuple<bool, Tuple<int, int>>>());
                     }
                     randomPath.SetPanel(puzzlePanelCopy);
-                    // Console.WriteLine("Must place sun? " + mustPlaceInSameRegionAsSun);
-                    // randomPath.PrintPath();
-                    // Console.Write("\t");
-                    // for(int i = 0; i < regionColor.Length; i++){
-                    //     Console.Write("(" + i + "," + regionColor[i] + ") ");
-                    // }
-                    // Console.WriteLine();
-                    // Pause for 1 second
-                    // Thread.Sleep(1);
-                    // for(int i = 0; i < nSunByColor_copy.Count; i++){
-                    //     Console.Write(i+ "," + nSunByColor_copy[i] + "; ");
-                    // }
-                    // Console.WriteLine();
                 }
-                // Console.WriteLine("iterations: " + (5000 - maxIterationBacktrack - 1));
-
             }
         }
         return randomPath;
@@ -307,10 +308,10 @@ static class Generator
             suns = sunCountByRegionByColor[regionIndex][regionColor[regionIndex]]; // If the region has a color and we want to place a square, we check the number of suns of the same color as the region
         }
         // compute the total number of suns in the region
-        int totalSuns = sunCountByRegionByColor[regionIndex].Sum();
+        int totalSuns = Utils.Sum(sunCountByRegionByColor[regionIndex]);
         // Compute the total number of suns in the region not yey paired with a symbol of the same color
         int totalSunsNotPaired = 0;
-        List<int> colorsMissing = new();
+        List<int> colorsMissing = new List<int>();
         for (int i = 0; i < sunCountByRegionByColor[regionIndex].Length; i++)
             if (i != regionColor[regionIndex] && sunCountByRegionByColor[regionIndex][i] == 1){
                 totalSunsNotPaired++;

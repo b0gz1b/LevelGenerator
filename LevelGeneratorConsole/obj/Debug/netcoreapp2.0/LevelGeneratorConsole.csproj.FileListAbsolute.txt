@@ -1,0 +1,13 @@
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\bin\Debug\netcoreapp2.0\LevelGeneratorConsole.deps.json
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\bin\Debug\netcoreapp2.0\LevelGeneratorConsole.runtimeconfig.json
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\bin\Debug\netcoreapp2.0\LevelGeneratorConsole.runtimeconfig.dev.json
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\bin\Debug\netcoreapp2.0\LevelGeneratorConsole.dll
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\bin\Debug\netcoreapp2.0\LevelGeneratorConsole.pdb
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\obj\Debug\netcoreapp2.0\LevelGeneratorConsole.csproj.AssemblyReference.cache
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\obj\Debug\netcoreapp2.0\LevelGeneratorConsole.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\obj\Debug\netcoreapp2.0\LevelGeneratorConsole.AssemblyInfoInputs.cache
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\obj\Debug\netcoreapp2.0\LevelGeneratorConsole.AssemblyInfo.cs
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\obj\Debug\netcoreapp2.0\LevelGeneratorConsole.csproj.CoreCompileInputs.cache
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\obj\Debug\netcoreapp2.0\LevelGeneratorConsole.dll
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\obj\Debug\netcoreapp2.0\LevelGeneratorConsole.pdb
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\obj\Debug\netcoreapp2.0\LevelGeneratorConsole.genruntimeconfig.cache

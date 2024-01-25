@@ -1,0 +1,11 @@
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\obj\Debug\net20\LevelGeneratorConsole.csproj.AssemblyReference.cache
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\obj\Debug\net20\LevelGeneratorConsole.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\obj\Debug\net20\LevelGeneratorConsole.AssemblyInfoInputs.cache
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\obj\Debug\net20\LevelGeneratorConsole.AssemblyInfo.cs
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\obj\Debug\net20\LevelGeneratorConsole.csproj.CoreCompileInputs.cache
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\bin\Debug\net20\LevelGeneratorConsole.pdb
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\obj\Debug\net20\LevelGeneratorConsole.pdb
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\bin\Debug\net20\LevelGeneratorConsole.exe.config
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\bin\Debug\net20\LevelGeneratorConsole.exe
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\obj\Debug\net20\LevelGeneratorConsole.csproj.SuggestedBindingRedirects.cache
+C:\Users\atram\fac\M2S3\EVHI\LevelGenerator\LevelGeneratorConsole\obj\Debug\net20\LevelGeneratorConsole.exe

@@ -1,53 +1,116 @@
 {
   "version": 3,
   "targets": {
-    "net6.0": {
-      "Newtonsoft.Json/13.0.3": {
+    ".NETFramework,Version=v2.0": {
+      "Microsoft.NETFramework.ReferenceAssemblies/1.0.2": {
         "type": "package",
-        "compile": {
-          "lib/net6.0/Newtonsoft.Json.dll": {}
-        },
-        "runtime": {
-          "lib/net6.0/Newtonsoft.Json.dll": {}
+        "dependencies": {
+          "Microsoft.NETFramework.ReferenceAssemblies.net20": "1.0.2"
+        }
+      },
+      "Microsoft.NETFramework.ReferenceAssemblies.net20/1.0.2": {
+        "type": "package",
+        "build": {
+          "build/Microsoft.NETFramework.ReferenceAssemblies.net20.targets": {}
+        }
+      }
+    },
+    ".NETFramework,Version=v2.0/win7-x86": {
+      "Microsoft.NETFramework.ReferenceAssemblies/1.0.2": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.NETFramework.ReferenceAssemblies.net20": "1.0.2"
+        }
+      },
+      "Microsoft.NETFramework.ReferenceAssemblies.net20/1.0.2": {
+        "type": "package",
+        "build": {
+          "build/Microsoft.NETFramework.ReferenceAssemblies.net20.targets": {}
         }
       }
     }
   },
   "libraries": {
-    "Newtonsoft.Json/13.0.3": {
-      "sha512": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ==",
+    "Microsoft.NETFramework.ReferenceAssemblies/1.0.2": {
+      "sha512": "5/cSEVld+px/CuRrbohO/djfg6++eR6zGpy88MgqloXvkj//WXWpFZyu/OpkXPN0u5m+dN/EVwLNYFUxD4h2+A==",
       "type": "package",
-      "path": "newtonsoft.json/13.0.3",
+      "path": "microsoft.netframework.referenceassemblies/1.0.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "LICENSE.md",
-        "README.md",
-        "lib/net20/Newtonsoft.Json.dll",
-        "lib/net20/Newtonsoft.Json.xml",
-        "lib/net35/Newtonsoft.Json.dll",
-        "lib/net35/Newtonsoft.Json.xml",
-        "lib/net40/Newtonsoft.Json.dll",
-        "lib/net40/Newtonsoft.Json.xml",
-        "lib/net45/Newtonsoft.Json.dll",
-        "lib/net45/Newtonsoft.Json.xml",
-        "lib/net6.0/Newtonsoft.Json.dll",
-        "lib/net6.0/Newtonsoft.Json.xml",
-        "lib/netstandard1.0/Newtonsoft.Json.dll",
-        "lib/netstandard1.0/Newtonsoft.Json.xml",
-        "lib/netstandard1.3/Newtonsoft.Json.dll",
-        "lib/netstandard1.3/Newtonsoft.Json.xml",
-        "lib/netstandard2.0/Newtonsoft.Json.dll",
-        "lib/netstandard2.0/Newtonsoft.Json.xml",
-        "newtonsoft.json.13.0.3.nupkg.sha512",
-        "newtonsoft.json.nuspec",
-        "packageIcon.png"
+        "microsoft.netframework.referenceassemblies.1.0.2.nupkg.sha512",
+        "microsoft.netframework.referenceassemblies.nuspec"
+      ]
+    },
+    "Microsoft.NETFramework.ReferenceAssemblies.net20/1.0.2": {
+      "sha512": "XWka/n9cKLI8sNZf8ROWzrcsZ7ucFvR7WfBIMwt+dKX4JFy2zB9Jm6hkpsv6yoyBMCvqHJl0laWKz47qhPOHxQ==",
+      "type": "package",
+      "path": "microsoft.netframework.referenceassemblies.net20/1.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/.NETFramework/v2.0/Accessibility.dll",
+        "build/.NETFramework/v2.0/AspNetMMCExt.dll",
+        "build/.NETFramework/v2.0/CustomMarshalers.dll",
+        "build/.NETFramework/v2.0/IEExecRemote.dll",
+        "build/.NETFramework/v2.0/IEHost.dll",
+        "build/.NETFramework/v2.0/IIEHost.dll",
+        "build/.NETFramework/v2.0/ISymWrapper.dll",
+        "build/.NETFramework/v2.0/Microsoft.Build.Engine.dll",
+        "build/.NETFramework/v2.0/Microsoft.Build.Framework.dll",
+        "build/.NETFramework/v2.0/Microsoft.Build.Tasks.dll",
+        "build/.NETFramework/v2.0/Microsoft.Build.Utilities.dll",
+        "build/.NETFramework/v2.0/Microsoft.JScript.dll",
+        "build/.NETFramework/v2.0/Microsoft.VisualBasic.Compatibility.Data.dll",
+        "build/.NETFramework/v2.0/Microsoft.VisualBasic.Compatibility.dll",
+        "build/.NETFramework/v2.0/Microsoft.VisualBasic.Vsa.dll",
+        "build/.NETFramework/v2.0/Microsoft.VisualBasic.dll",
+        "build/.NETFramework/v2.0/Microsoft.VisualC.dll",
+        "build/.NETFramework/v2.0/Microsoft.Vsa.Vb.CodeDOMProcessor.dll",
+        "build/.NETFramework/v2.0/Microsoft.Vsa.dll",
+        "build/.NETFramework/v2.0/Microsoft_VsaVb.dll",
+        "build/.NETFramework/v2.0/RedistList/FrameworkList.xml",
+        "build/.NETFramework/v2.0/SubsetList/Client.xml",
+        "build/.NETFramework/v2.0/System.Configuration.Install.dll",
+        "build/.NETFramework/v2.0/System.Configuration.dll",
+        "build/.NETFramework/v2.0/System.Data.OracleClient.dll",
+        "build/.NETFramework/v2.0/System.Data.SqlXml.dll",
+        "build/.NETFramework/v2.0/System.Data.dll",
+        "build/.NETFramework/v2.0/System.Deployment.dll",
+        "build/.NETFramework/v2.0/System.Design.dll",
+        "build/.NETFramework/v2.0/System.DirectoryServices.Protocols.dll",
+        "build/.NETFramework/v2.0/System.DirectoryServices.dll",
+        "build/.NETFramework/v2.0/System.Drawing.Design.dll",
+        "build/.NETFramework/v2.0/System.Drawing.dll",
+        "build/.NETFramework/v2.0/System.EnterpriseServices.Thunk.dll",
+        "build/.NETFramework/v2.0/System.EnterpriseServices.Wrapper.dll",
+        "build/.NETFramework/v2.0/System.EnterpriseServices.dll",
+        "build/.NETFramework/v2.0/System.Management.dll",
+        "build/.NETFramework/v2.0/System.Messaging.dll",
+        "build/.NETFramework/v2.0/System.Runtime.Remoting.dll",
+        "build/.NETFramework/v2.0/System.Runtime.Serialization.Formatters.Soap.dll",
+        "build/.NETFramework/v2.0/System.Security.dll",
+        "build/.NETFramework/v2.0/System.ServiceProcess.dll",
+        "build/.NETFramework/v2.0/System.Transactions.dll",
+        "build/.NETFramework/v2.0/System.Web.Mobile.dll",
+        "build/.NETFramework/v2.0/System.Web.RegularExpressions.dll",
+        "build/.NETFramework/v2.0/System.Web.Services.dll",
+        "build/.NETFramework/v2.0/System.Web.dll",
+        "build/.NETFramework/v2.0/System.Windows.Forms.dll",
+        "build/.NETFramework/v2.0/System.Xml.dll",
+        "build/.NETFramework/v2.0/System.dll",
+        "build/.NETFramework/v2.0/cscompmgd.dll",
+        "build/.NETFramework/v2.0/mscorlib.dll",
+        "build/.NETFramework/v2.0/sysglobl.dll",
+        "build/Microsoft.NETFramework.ReferenceAssemblies.net20.targets",
+        "microsoft.netframework.referenceassemblies.net20.1.0.2.nupkg.sha512",
+        "microsoft.netframework.referenceassemblies.net20.nuspec"
       ]
     }
   },
   "projectFileDependencyGroups": {
-    "net6.0": [
-      "Newtonsoft.Json >= 13.0.3"
+    ".NETFramework,Version=v2.0": [
+      "Microsoft.NETFramework.ReferenceAssemblies >= 1.0.2"
     ]
   },
   "packageFolders": {
@@ -66,14 +129,14 @@
         "C:\\Users\\atram\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
-        "net6.0"
+        "net20"
       ],
       "sources": {
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
+        "net20": {
+          "targetAlias": "net20",
           "projectReferences": {}
         }
       },
@@ -84,30 +147,22 @@
       }
     },
     "frameworks": {
-      "net6.0": {
-        "targetAlias": "net6.0",
+      "net20": {
+        "targetAlias": "net20",
         "dependencies": {
-          "Newtonsoft.Json": {
+          "Microsoft.NETFramework.ReferenceAssemblies": {
+            "suppressParent": "All",
             "target": "Package",
-            "version": "[13.0.3, )"
-          }
-        },
-        "imports": [
-          "net461",
-          "net462",
-          "net47",
-          "net471",
-          "net472",
-          "net48"
-        ],
-        "assetTargetFallback": true,
-        "warn": true,
-        "frameworkReferences": {
-          "Microsoft.NETCore.App": {
-            "privateAssets": "all"
+            "version": "[1.0.2, )",
+            "autoReferenced": true
           }
         },
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
+      }
+    },
+    "runtimes": {
+      "win7-x86": {
+        "#import": []
       }
     }
   }
