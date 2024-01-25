@@ -13,9 +13,9 @@ static class Generator
             puzzlePanel = new Panel(nRows, nCols);
             randomPath = new PlayerPath(puzzlePanel);
             // Place random start and end positions
-            Console.WriteLine("Start and end: " + puzzlePanel.GetStart().First + ", " + puzzlePanel.GetStart().Second + " - " + puzzlePanel.GetEnd().First + ", " + puzzlePanel.GetEnd().Second);
+            // Console.WriteLine("Start and end: " + puzzlePanel.GetStart().First + ", " + puzzlePanel.GetStart().Second + " - " + puzzlePanel.GetEnd().First + ", " + puzzlePanel.GetEnd().Second);
             puzzlePanel.RandomStartEndCOVR();
-            Console.WriteLine("Start and end: " + puzzlePanel.GetStart().First + ", " + puzzlePanel.GetStart().Second + " - " + puzzlePanel.GetEnd().First + ", " + puzzlePanel.GetEnd().Second);
+            // Console.WriteLine("Start and end: " + puzzlePanel.GetStart().First + ", " + puzzlePanel.GetStart().Second + " - " + puzzlePanel.GetEnd().First + ", " + puzzlePanel.GetEnd().Second);
             // Debug: print the panel
             puzzlePanel.PrintPanel(printStartEnd : true);
             // Place random walls
@@ -24,7 +24,7 @@ static class Generator
             while (!walls_valid)
             {
                 // Debug
-                Console.WriteLine("Trying to place walls");
+                // Console.WriteLine("Trying to place walls");
                 for (int i = 0; i < nWalls; i++)
                 {
                     Wall wall = new Wall();
@@ -33,7 +33,7 @@ static class Generator
                     do
                     {
                         // Debug
-                        Console.WriteLine("\t Trying to place wall " + i);
+                        // Console.WriteLine("\t Trying to place wall " + i);
                         int a = random.Next(0, (puzzlePanel.GetGrid().GetLength(0) + 1) / 2);
                         int b = random.Next(0, (puzzlePanel.GetGrid().GetLength(1) - 1) / 2);
                         if (random.Next(2) == 0)
@@ -57,7 +57,7 @@ static class Generator
                     // Debug 
                     List<Tuple<int, int>> ccpoints = randomPath.GetPoints();
                     // Debug: print the path
-                    Console.WriteLine("points.Count = " + ccpoints.Count);
+                    // Console.WriteLine("points.Count = " + ccpoints.Count);
                     walls_valid = true;
                 }
                 catch
@@ -67,14 +67,14 @@ static class Generator
                 }
             }
             // Debug
-            Console.WriteLine("Walls placed");
+            // Console.WriteLine("Walls placed");
             List<Tuple<int, int>> points = randomPath.GetPoints();
             
             List<Tuple<int, int>> points_copy = new List<Tuple<int, int>>(points);
             
             // Debug: print the path
-            randomPath.PrintRegions();
-            Console.WriteLine("Region printed");
+            // randomPath.PrintRegions();
+            // Console.WriteLine("Region printed");
             // Place hexagons randomly on the path
             for(int i = 0; i < nHexagon; i++){
                 Hexagon hexagon = new Hexagon();
@@ -83,7 +83,7 @@ static class Generator
                 points_copy.RemoveAt(index);
             }
             // Debug: print the panel
-            puzzlePanel.PrintPanel();
+            // puzzlePanel.PrintPanel();
 
             List<List<Tuple<int, int>>> regions = puzzlePanel.GetRegions(points);
             int minNumberOfRegions = 0;
@@ -136,7 +136,7 @@ static class Generator
                 int lastColor = -1;
                 while((Utils.Sum(nSquareByColor_copy) > 0 || Utils.Sum(nSunByColor_copy) > 0) && maxIterationBacktrack-- > 0){
                     // Debug
-                    Console.WriteLine("Iteration " + iteration);
+                    // Console.WriteLine("Iteration " + iteration);
                     
                     // Choose the region to place the square or sun
                     Utils.ShuffleArray(regionIndices);
@@ -202,7 +202,7 @@ static class Generator
 
                             if(puzzlePanelCopy.GetGrid()[regions[regionIndex][pillarIndex].First, regions[regionIndex][pillarIndex].Second] != null || pillarsVisited[iteration].Contains(new Tuple<bool, Tuple<int, int>>(isSquare, regions[regionIndex][pillarIndex]))){
                                 // Debug
-                                Console.WriteLine("\t\tPillar " + regions[regionIndex][pillarIndex] + " already visited or occupied");
+                                // Console.WriteLine("\t\tPillar " + regions[regionIndex][pillarIndex] + " already visited or occupied");
                                 regionIndice++;
                                 continue;
                             }
@@ -234,7 +234,7 @@ static class Generator
                     }
                     if(!placed){
                         // Debug
-                        Console.WriteLine("\t No pillar found, backtracking");
+                        // Console.WriteLine("\t No pillar found, backtracking");
                         if(iteration == 0)
                             break;
                         else{

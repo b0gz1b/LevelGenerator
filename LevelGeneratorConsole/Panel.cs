@@ -354,7 +354,7 @@ public class Panel
         }
         // Depth-first search to find all the regions using auxiliary function dfs_pillars
         while(not_visited.Count > 0){
-            Console.WriteLine("not_visited.Count: " + not_visited.Count);
+            // Console.WriteLine("not_visited.Count: " + not_visited.Count);
             List<Tuple<int, int>> pillars = dfs_pillars(not_visited[0].First, not_visited[0].Second);
             foreach(Tuple<int, int> pillar in pillars){
                 Utils.TupleListRemove(not_visited, pillar);

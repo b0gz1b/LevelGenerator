@@ -2,13 +2,13 @@
   "version": 3,
   "targets": {
     ".NETFramework,Version=v2.0": {
-      "Microsoft.NETFramework.ReferenceAssemblies/1.0.2": {
+      "Microsoft.NETFramework.ReferenceAssemblies/1.0.3": {
         "type": "package",
         "dependencies": {
-          "Microsoft.NETFramework.ReferenceAssemblies.net20": "1.0.2"
+          "Microsoft.NETFramework.ReferenceAssemblies.net20": "1.0.3"
         }
       },
-      "Microsoft.NETFramework.ReferenceAssemblies.net20/1.0.2": {
+      "Microsoft.NETFramework.ReferenceAssemblies.net20/1.0.3": {
         "type": "package",
         "build": {
           "build/Microsoft.NETFramework.ReferenceAssemblies.net20.targets": {}
@@ -16,13 +16,13 @@
       }
     },
     ".NETFramework,Version=v2.0/win7-x86": {
-      "Microsoft.NETFramework.ReferenceAssemblies/1.0.2": {
+      "Microsoft.NETFramework.ReferenceAssemblies/1.0.3": {
         "type": "package",
         "dependencies": {
-          "Microsoft.NETFramework.ReferenceAssemblies.net20": "1.0.2"
+          "Microsoft.NETFramework.ReferenceAssemblies.net20": "1.0.3"
         }
       },
-      "Microsoft.NETFramework.ReferenceAssemblies.net20/1.0.2": {
+      "Microsoft.NETFramework.ReferenceAssemblies.net20/1.0.3": {
         "type": "package",
         "build": {
           "build/Microsoft.NETFramework.ReferenceAssemblies.net20.targets": {}
@@ -31,21 +31,21 @@
     }
   },
   "libraries": {
-    "Microsoft.NETFramework.ReferenceAssemblies/1.0.2": {
-      "sha512": "5/cSEVld+px/CuRrbohO/djfg6++eR6zGpy88MgqloXvkj//WXWpFZyu/OpkXPN0u5m+dN/EVwLNYFUxD4h2+A==",
+    "Microsoft.NETFramework.ReferenceAssemblies/1.0.3": {
+      "sha512": "vUc9Npcs14QsyOD01tnv/m8sQUnGTGOw1BCmKcv77LBJY7OxhJ+zJF7UD/sCL3lYNFuqmQEVlkfS4Quif6FyYg==",
       "type": "package",
-      "path": "microsoft.netframework.referenceassemblies/1.0.2",
+      "path": "microsoft.netframework.referenceassemblies/1.0.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "microsoft.netframework.referenceassemblies.1.0.2.nupkg.sha512",
+        "microsoft.netframework.referenceassemblies.1.0.3.nupkg.sha512",
         "microsoft.netframework.referenceassemblies.nuspec"
       ]
     },
-    "Microsoft.NETFramework.ReferenceAssemblies.net20/1.0.2": {
-      "sha512": "XWka/n9cKLI8sNZf8ROWzrcsZ7ucFvR7WfBIMwt+dKX4JFy2zB9Jm6hkpsv6yoyBMCvqHJl0laWKz47qhPOHxQ==",
+    "Microsoft.NETFramework.ReferenceAssemblies.net20/1.0.3": {
+      "sha512": "mvyTeaG1dVyCx24hjVnqk1YvR4fwS1fHxt1tdnzWMGCHc09mvNVGF+8VAobWSDi+iDz6fgJ7jE5d/mWap4PYoA==",
       "type": "package",
-      "path": "microsoft.netframework.referenceassemblies.net20/1.0.2",
+      "path": "microsoft.netframework.referenceassemblies.net20/1.0.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -103,14 +103,14 @@
         "build/.NETFramework/v2.0/mscorlib.dll",
         "build/.NETFramework/v2.0/sysglobl.dll",
         "build/Microsoft.NETFramework.ReferenceAssemblies.net20.targets",
-        "microsoft.netframework.referenceassemblies.net20.1.0.2.nupkg.sha512",
+        "microsoft.netframework.referenceassemblies.net20.1.0.3.nupkg.sha512",
         "microsoft.netframework.referenceassemblies.net20.nuspec"
       ]
     }
   },
   "projectFileDependencyGroups": {
     ".NETFramework,Version=v2.0": [
-      "Microsoft.NETFramework.ReferenceAssemblies >= 1.0.2"
+      "Microsoft.NETFramework.ReferenceAssemblies >= 1.0.3"
     ]
   },
   "packageFolders": {
@@ -119,11 +119,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\atram\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\LevelGeneratorConsole.csproj",
+      "projectUniqueName": "D:\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\LevelGeneratorConsole.csproj",
       "projectName": "LevelGeneratorConsole",
-      "projectPath": "C:\\Users\\atram\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\LevelGeneratorConsole.csproj",
+      "projectPath": "D:\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\LevelGeneratorConsole.csproj",
       "packagesPath": "C:\\Users\\atram\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\atram\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\obj\\",
+      "outputPath": "D:\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\atram\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -153,11 +153,11 @@
           "Microsoft.NETFramework.ReferenceAssemblies": {
             "suppressParent": "All",
             "target": "Package",
-            "version": "[1.0.2, )",
+            "version": "[1.0.3, )",
             "autoReferenced": true
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
       }
     },
     "runtimes": {

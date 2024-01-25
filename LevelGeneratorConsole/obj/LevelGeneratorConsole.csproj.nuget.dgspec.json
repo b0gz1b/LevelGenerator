@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\atram\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\LevelGeneratorConsole.csproj": {}
+    "D:\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\LevelGeneratorConsole.csproj": {}
   },
   "projects": {
-    "C:\\Users\\atram\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\LevelGeneratorConsole.csproj": {
+    "D:\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\LevelGeneratorConsole.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\atram\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\LevelGeneratorConsole.csproj",
+        "projectUniqueName": "D:\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\LevelGeneratorConsole.csproj",
         "projectName": "LevelGeneratorConsole",
-        "projectPath": "C:\\Users\\atram\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\LevelGeneratorConsole.csproj",
+        "projectPath": "D:\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\LevelGeneratorConsole.csproj",
         "packagesPath": "C:\\Users\\atram\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\atram\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\obj\\",
+        "outputPath": "D:\\fac\\M2S3\\EVHI\\LevelGenerator\\LevelGeneratorConsole\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\atram\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -41,11 +41,11 @@
             "Microsoft.NETFramework.ReferenceAssemblies": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[1.0.2, )",
+              "version": "[1.0.3, )",
               "autoReferenced": true
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       },
       "runtimes": {
