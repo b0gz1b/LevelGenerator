@@ -7,7 +7,7 @@ static class Generator
         Panel puzzlePanel = new Panel(nRows, nCols);
         PlayerPath randomPath = new PlayerPath(puzzlePanel);
         bool is_valid = false;
-        int maxIteration = 1000;
+        int maxIteration = 100000;
         
         while(!is_valid && maxIteration-- > 0){
             puzzlePanel = new Panel(nRows, nCols);
@@ -292,6 +292,9 @@ static class Generator
                     randomPath.SetPanel(puzzlePanelCopy);
                 }
             }
+        }
+        if(!is_valid){
+            throw new Exception("No valid level found");
         }
         return randomPath;
     }

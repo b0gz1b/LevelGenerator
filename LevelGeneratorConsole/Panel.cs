@@ -73,12 +73,12 @@ public class Panel
     public void RandomStartEndCOVR(){
         // For COVR we want only starts on the bottom row and ends on the top row
         System.Random random = new System.Random();
-        int row = grid.GetLength(0) - 1;
-        int col = random.Next((grid.GetLength(1)+1)/2) * 2;
+        int row = 0;
+        int col = random.Next(1,(grid.GetLength(1)+1)/2 - 1) * 2;
         start = new Tuple<int, int>(row, col);
         SetStart(start);
-        row = 0;
-        col = random.Next((grid.GetLength(1)+1)/2) * 2;
+        row = grid.GetLength(0) - 1;
+        col = random.Next(1,(grid.GetLength(1)+1)/2 - 1) * 2;
         end = new Tuple<int, int>(row, col);
         SetEnd(end);
     }
