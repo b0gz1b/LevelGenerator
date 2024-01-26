@@ -525,4 +525,48 @@ public class Panel
             Console.WriteLine();
         }
     }
+
+    public void WriteToFile(string filePath){
+        // Print the panel to a file with the start and end positions
+        using (System.IO.StreamWriter file = new System.IO.StreamWriter(filePath))
+        {
+            for (int row = -1; row <= grid.GetLength(0); row++)
+            {
+                for (int col = 0; col < grid.GetLength(1); col++)
+                {
+                    if (row == start.First && col == start.Second)
+                        file.Write("S ");
+                    else if (row == end.First && col == end.Second)
+                        file.Write("E ");
+                    else if (row == -1 || row == grid.GetLength(0))
+                        file.Write("  ");
+                    else if (grid[row, col] != null)
+                        file.Write(grid[row, col].GetSymbol() + " ");
+                    else
+                    {
+                        if (row % 2 == 0 && col % 2 == 0)
+                        {
+                            file.Write(". ");
+                        }
+                        else if (row % 2 != col % 2)
+                        {
+                            if (row % 2 == 0)
+                            {
+                                file.Write("- ");
+                            }
+                            else
+                            {
+                                file.Write("| ");
+                            }
+                        }
+                        else
+                        {
+                            file.Write("O ");
+                        }
+                    }
+                }
+                file.WriteLine();
+            }
+        }
+    }
 }
