@@ -27,6 +27,11 @@ public class Tuple<T1, T2> : IEquatable<Tuple<T1, T2>>
         else if (!Second.Equals(other.Second)) return false;
         return true;
     }
+
+    public Tuple<T2, T1> Invert()
+    {
+        return Tuple.New(Second, First);
+    }
 }
 
 public static class Tuple

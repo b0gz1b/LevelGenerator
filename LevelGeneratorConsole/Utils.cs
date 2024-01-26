@@ -73,5 +73,15 @@ static class Utils
         }
         return false;
     }
+
+    public static List<Tuple<int, int>> InvertTupleList(List<Tuple<int, int>> list)
+    {
+        List<Tuple<int, int>> invertedList = new List<Tuple<int, int>>();
+        foreach (Tuple<int, int> element in list)
+        {
+            invertedList.Add(element.Invert());
+        }
+        return invertedList;
+    }
 }
 

@@ -10,6 +10,11 @@ class PlayerPath{
         points = new List<Tuple<int, int>>();
     }
 
+    public PlayerPath(Panel panel, List<Tuple<int, int>> points){
+        this.panel = panel;
+        this.points = points;
+    }
+
     public bool AddNode(int indexRow, int indexCol){
         if(!panel.IsPointValid(indexRow, indexCol)){
             return false; // The node is not within the bounds of the panel
