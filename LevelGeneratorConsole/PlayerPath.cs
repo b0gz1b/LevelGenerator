@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Threading;
 class PlayerPath{
     private Panel panel;
@@ -226,6 +227,96 @@ class PlayerPath{
                         result[0]++;
                     }
                 }
+            }
+        }
+        return result;
+    }
+
+    public int[] BuggyRulesSuns(){
+        int[] result = new int[3] { 0, 0, 0 };
+        // First rule: separating the suns in equal groups but not groups of 2
+        // Second rule: avoiding to touch the suns with the line
+        // Third rule: grouping by 2 but ignoring the color
+        IPuzzleSymbol[,] grid = panel.GetGrid();
+        List<List<Tuple<int, int>>> regions = panel.GetRegions(points);
+        int nbSunsColor = panel.GetSunColors().Count;
+        int[,] sunCount = new int[regions.Count, nbSunsColor];
+        for (int i = 0; i < regions.Count; i++)
+        {
+            for (int j = 0; j < panel.GetSunColors().Count; j++)
+            {
+                sunCount[i, j] = 0;
+            }
+        }
+        for (int i = 0; i < regions.Count; i++)
+        {
+            List<Tuple<int, int>> region = regions[i];
+            foreach (Tuple<int, int> sun in region)
+            {
+                if (grid[sun.First, sun.Second] != null && grid[sun.First, sun.Second].Name == "Sun")
+                {
+                    int colorId = grid[sun.First, sun.Second].GetColorId();
+                    if (sunCount[i, colorId] == 0)
+                    {
+                        int count = 1;
+                        foreach (Tuple<int, int> symbol in region)
+                        {
+                            if (grid[symbol.First, symbol.Second] != null && ( grid[symbol.First, symbol.Second].Name == "Sun"))
+                            {
+                                if (grid[symbol.First, symbol.Second].GetColorId() == colorId && symbol != sun)
+                                {
+                                    count++;
+                                }
+                            }
+                        }
+                        sunCount[i, colorId] += count;
+                    }
+                }
+            }
+        }
+        // Check if for each color there is the same number of suns in each region
+        for(int colorId = 0; colorId < nbSunsColor; colorId++)
+        {
+            int count = sunCount[0, colorId];
+            for (int i = 1; i < regions.Count; i++)
+            {
+                if (sunCount[i, colorId] != count)
+                {
+                    result[0]++;
+                }
+            }
+            if(result[0] == 0 && count == 2)
+            {
+                result[0] = 1;
+            }
+        }
+
+        foreach(Tuple<int, int> point in points)
+        {
+            List<Tuple<int, int>> neighbourPillars = panel.GetPathAdjacentPillars(point.First, point.Second);
+            foreach(Tuple<int, int> neighbourPillar in neighbourPillars)
+            {
+                if(grid[neighbourPillar.First, neighbourPillar.Second] != null && grid[neighbourPillar.First, neighbourPillar.Second].Name == "Sun")
+                {
+                    result[1]++;
+                }
+            }
+        }
+        for (int i = 1; i < regions.Count; i++)
+        {
+            bool colorPair = true;
+            int count = 0;
+            for (int j = 0; j < nbSunsColor; j++)
+            {
+                if(count > 0 && sunCount[i, j] > 0)
+                {
+                    colorPair = false;
+                }
+                count += sunCount[i, j];
+            }
+            if (count != 2 || colorPair)
+            {
+                result[2]++;
             }
         }
         return result;

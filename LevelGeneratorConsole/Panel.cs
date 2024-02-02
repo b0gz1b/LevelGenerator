@@ -246,6 +246,36 @@ public class Panel
         return neighbourPillars;
     }
 
+    public List<Tuple<int, int>> GetPathAdjacentPillars(int indexRow, int indexCol)
+    {
+        // Check if the point is within the bounds of the panel
+        if(!IsPointValid(indexRow, indexCol)){
+            throw new ArgumentOutOfRangeException("indexCol, indexRow");
+        }
+        // Check if the point is a node or an edge
+        if (indexCol % 2 != 0 && indexRow % 2 != 0)
+        {
+            throw new Exception("Invalid placement");
+        }
+
+        // Initialize the list of all possible neighbour pillars
+        List<Tuple<int, int>> neighbourPillars = new List<Tuple<int, int>>();
+        if(IsPointValid(indexRow - 1, indexCol) && (indexRow - 1) % 2 == 1 && indexCol % 2 == 1){
+            neighbourPillars.Add(new Tuple<int, int>(indexRow - 1, indexCol));
+        }
+        if(IsPointValid(indexRow + 1, indexCol) && (indexRow + 1) % 2 == 1 && indexCol % 2 == 1){
+            neighbourPillars.Add(new Tuple<int, int>(indexRow + 1, indexCol));
+        }
+        if(IsPointValid(indexRow, indexCol - 1) && indexRow % 2 == 1 && (indexCol - 1) % 2 == 1){
+            neighbourPillars.Add(new Tuple<int, int>(indexRow, indexCol - 1));
+        }
+        if(IsPointValid(indexRow, indexCol + 1) && indexRow % 2 == 1 && (indexCol + 1) % 2 == 1){
+            neighbourPillars.Add(new Tuple<int, int>(indexRow, indexCol + 1));
+        }
+        
+        return neighbourPillars;
+    }
+
     public List<Tuple<int, int>> GetHexagonPositions()
     {
         // Initialize the list of all hexagon positions
@@ -295,6 +325,22 @@ public class Panel
             }
         }
         return sunPositions;
+    }
+
+    public List<int> GetSunColors(){
+        // Initialize the list of all sun colors
+        List<int> sunColors = new List<int>();
+        for (int row = 0; row < grid.GetLength(0); row++)
+        {
+            for (int col = 0; col < grid.GetLength(1); col++)
+            {
+                if (grid[row, col] is Sun)
+                {
+                    sunColors.Add(grid[row, col].GetColorId());
+                }
+            }
+        }
+        return sunColors;
     }
 
     public List<Tuple<int, int>> GetSquarePositions()
