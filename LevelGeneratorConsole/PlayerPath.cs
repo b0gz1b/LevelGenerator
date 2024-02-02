@@ -285,10 +285,6 @@ class PlayerPath{
                     result[0]++;
                 }
             }
-            if(result[0] == 0 && count == 2)
-            {
-                result[0] = 1;
-            }
         }
 
         foreach(Tuple<int, int> point in points)
@@ -302,22 +298,40 @@ class PlayerPath{
                 }
             }
         }
-        for (int i = 1; i < regions.Count; i++)
+        // Check for every region if there only 2 suns and of different colors
+        bool existsFalsePair = false;
+        foreach (List<Tuple<int, int>> region in regions)
         {
-            bool colorPair = true;
-            int count = 0;
-            for (int j = 0; j < nbSunsColor; j++)
+            foreach (Tuple<int, int> sun in region)
             {
-                if(count > 0 && sunCount[i, j] > 0)
+                if (grid[sun.First, sun.Second] != null && grid[sun.First, sun.Second].Name == "Sun")
                 {
-                    colorPair = false;
+                    int colorId = grid[sun.First, sun.Second].GetColorId();
+                    int count = 1;
+                    foreach (Tuple<int, int> symbol in region)
+                    {
+                        if (grid[symbol.First, symbol.Second] != null &&  grid[symbol.First, symbol.Second].Name == "Sun")
+                        {
+                            if (symbol != sun)
+                            {
+                                count++;
+                            }
+                            if (grid[symbol.First, symbol.Second].GetColorId() != colorId)
+                            {
+                                existsFalsePair = true;
+                            }
+                        }
+                    }
+                    if (count != 2)
+                    {
+                        result[2] = 1;
+                    }
                 }
-                count += sunCount[i, j];
             }
-            if (count != 2 || colorPair)
-            {
-                result[2]++;
-            }
+        }
+        if (!existsFalsePair)
+        {
+            result[2] = 1;
         }
         return result;
     }
