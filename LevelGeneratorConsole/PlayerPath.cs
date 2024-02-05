@@ -275,14 +275,21 @@ class PlayerPath{
             }
         }
         // Check if for each color there is the same number of suns in each region
-        for(int colorId = 0; colorId < nbSunsColor; colorId++)
-        {
-            int count = sunCount[0, colorId];
-            for (int i = 1; i < regions.Count; i++)
+        if (nbSunsColor > 1){
+            for(int colorId = 0; colorId < nbSunsColor; colorId++)
             {
-                if (sunCount[i, colorId] != count)
+                for (int i = 0; i < regions.Count; i++)
                 {
-                    result[0]++;
+                    if (sunCount[i, colorId] == 2)
+                    {
+                        for (int j = 0; j < nbSunsColor; j++)
+                        {
+                            if (j != colorId && sunCount[i, j] == 2)
+                            {
+                                result[0]++;
+                            }
+                        }
+                    }
                 }
             }
         }
