@@ -84,6 +84,12 @@ static class Generator
             }
             // Debug: print the panel
             // puzzlePanel.PrintPanel();
+            if (nColors == 0)
+            {
+                randomPath.SetPanel(new Panel(puzzlePanel));
+                is_valid = true;
+                continue;
+            }
 
             List<List<Tuple<int, int>>> regions = puzzlePanel.GetRegions(points);
             int minNumberOfRegions = 0;
